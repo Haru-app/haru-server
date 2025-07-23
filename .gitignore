@@ -1,0 +1,50 @@
+# =====================
+# 1. Build output
+# =====================
+/build/
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# =====================
+# 2. IntelliJ IDEA
+# =====================
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+# =====================
+# 3. STS(Spring Tool Suite)
+# =====================
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache/
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+# =====================
+# 4. VS Code
+# =====================
+.vscode/
+
+# =====================
+# 5. OS/Tool specific
+# =====================
+.DS_Store
+Thumbs.db
+
+# =====================
+# 6. Application properties
+# =====================
+application-*.properties
+.env
