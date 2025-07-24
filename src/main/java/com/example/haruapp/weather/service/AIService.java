@@ -17,7 +17,13 @@ public class AIService {
     }
 
     public String generation(WeatherForecastDto dto) {
-        String userInput = dto.toString() +"이거 바탕으로 날씨 2단어 로 만들어줘";
+        String userInput = dto.toString() +"날씨 카테고리 5개\n" +
+                "1. 맑음\n" +
+                "2. 비\n" +
+                "3. 눈\n" +
+                "4. 흐림\n" +
+                "5. 천둥 중에 하나 단어 선택해고," +
+                "그리고 추가적으로 날씨 1단어 추가해서 2단어 줘";
         log.info("입력값: "+userInput);
 
         CallResponseSpec callResponseSpec= this.chatClient.prompt()
