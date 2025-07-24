@@ -16,7 +16,8 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예기치 못한 서버 오류입니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN,"권한이 부족합니다." ),
 
-            ;
+    PARSE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "날씨 파싱에러"),
+    WEATHERAPI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"날씨 api 서버에러" );
 
     // Member
     private final HttpStatus status;
