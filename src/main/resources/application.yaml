@@ -12,7 +12,7 @@ spring:
       options:
         model: gpt-4.1-nano
 mybatis:
-  type-aliases-package: org.example.haruapp.domain
+  type-aliases-package: org.example.haruapp
   configuration:
     map-underscore-to-camel-case: true
 
