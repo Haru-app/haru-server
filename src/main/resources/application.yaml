@@ -6,11 +6,16 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: oracle.jdbc.OracleDriver
+
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}  # 실제 OpenAI 키로 대체
       options:
         model: gpt-4.1-nano
+
+  data:
+    redis:
+      url: ${REDIS_URL}
 mybatis:
   type-aliases-package: org.example.haruapp
   configuration:
