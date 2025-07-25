@@ -1,7 +1,9 @@
 package com.example.haruapp.emotion.controller;
 
 import com.example.haruapp.emotion.dto.EmotionQuestion;
+import com.example.haruapp.emotion.dto.EmotionResponse;
 import com.example.haruapp.emotion.dto.request.QuestionResultRequest;
+import com.example.haruapp.emotion.service.EmotionService;
 import com.example.haruapp.emotion.service.EmotionSimilarityService;
 import com.example.haruapp.emotion.service.QuestionService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +22,15 @@ public class EmotionController {
 
     private final EmotionSimilarityService emotionSimilarityService;
     private final QuestionService questionService;
+    private final EmotionService emotionService;
+
+    @GetMapping("/emotions")
+    public ResponseEntity<List<EmotionResponse>> getEmotionQuestions() {
+
+        List<EmotionResponse> emotionList =  emotionService.getAllEmotionResponse();
+
+        return ResponseEntity.ok(emotionList);
+    }
 
     @GetMapping("/emotion/random/question")
     public ResponseEntity<?> getRandomQuestion() {
