@@ -16,7 +16,7 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예기치 못한 서버 오류입니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN,"권한이 부족합니다." ),
 
-            ;
+    SIMILARITY_FETCH_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파이썬 서버에서 오류가 생겼습니다.");
 
     // Member
     private final HttpStatus status;
