@@ -18,6 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EmotionController {
 
+    private final EmotionSimilarityService emotionSimilarityService;
     private final QuestionService questionService;
 
     @GetMapping("/emotion/random/question")
@@ -32,4 +33,15 @@ public class EmotionController {
         return ResponseEntity.ok(questions);
     }
 
+    @PostMapping("/emotions/similarity/recreate")
+    public ResponseEntity<?> embeddingEmotion(@RequestBody List<QuestionResultRequest> questionResultRequestList) {
+
+        Map<String, Double> result = emotionSimilarityService.calculateSimilarity(questionResultRequestList);
+
+        List<String> emotionTop2 = emotionSimilarityService.getTop2(result);
+
+        log.info("result {}", result);
+
+        return ResponseEntity.ok(emotionTop2);
+    }
 }
