@@ -44,7 +44,7 @@ public class EmotionController {
         return ResponseEntity.ok(questions);
     }
 
-    @PostMapping("/emotions/similarity/recreate")
+    @PostMapping("/emotions/similarity")
     public ResponseEntity<?> embeddingEmotion(@RequestBody List<QuestionResultRequest> questionResultRequestList) {
 
         Map<String, Double> result = emotionSimilarityService.calculateSimilarity(questionResultRequestList);
