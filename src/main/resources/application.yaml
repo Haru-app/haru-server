@@ -7,6 +7,9 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: oracle.jdbc.OracleDriver
 
+  data:
+    redis:
+      url: ${REDIS_URL}
 mybatis:
   type-aliases-package: org.example.haruapp
   configuration:
