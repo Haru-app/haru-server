@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class EmotionResponse {
     private Long emotionId;
-    private String emotion;
+    private String emotionName;
 }

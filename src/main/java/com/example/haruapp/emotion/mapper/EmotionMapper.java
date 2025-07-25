@@ -10,7 +10,7 @@ import java.util.List;
 public interface EmotionMapper {
 
     @Select("""
-            select EMOTION_ID,EMOTION_NAME from EMOTION;
+            select EMOTION_ID,EMOTION_NAME from EMOTION
             """)
     List<EmotionResponse> findAllToEmotionResponse();
 }
