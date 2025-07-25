@@ -1,0 +1,35 @@
+package com.example.haruapp.emotion.controller;
+
+import com.example.haruapp.emotion.dto.EmotionQuestion;
+import com.example.haruapp.emotion.dto.request.QuestionResultRequest;
+import com.example.haruapp.emotion.service.EmotionSimilarityService;
+import com.example.haruapp.emotion.service.QuestionService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@Slf4j
+@RequestMapping("/api")
+@RequiredArgsConstructor
+public class EmotionController {
+
+    private final QuestionService questionService;
+
+    @GetMapping("/emotion/random/question")
+    public ResponseEntity<?> getRandomQuestion() {
+
+        int count = 4;
+
+        List<EmotionQuestion> questions = questionService.getRandomQuestion(count);
+
+        log.info("questions {}", questions);
+
+        return ResponseEntity.ok(questions);
+    }
+
+}
