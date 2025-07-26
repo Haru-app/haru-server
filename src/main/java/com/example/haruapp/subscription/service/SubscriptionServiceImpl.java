@@ -6,6 +6,7 @@ import com.example.haruapp.member.domain.Member;
 import com.example.haruapp.member.mapper.MemberMapper;
 import com.example.haruapp.subscription.domain.Subscription;
 import com.example.haruapp.subscription.dto.response.BillingResponse;
+import com.example.haruapp.subscription.dto.response.PaymentResponse;
 import com.example.haruapp.subscription.external.TossPaymentsClient;
 import com.example.haruapp.subscription.mapper.SubscriptionMapper;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         return newCustomerKey;
     }
 
-    @Override public void confirmBillingKey(String authKey, String customerKey) {
+    @Override
+    public void confirmBillingKey(String authKey, String customerKey) {
         //  Toss에 billingKey 요청
         BillingResponse billing = tossPaymentsClient.requestBillingKey(authKey, customerKey);
 
@@ -60,6 +62,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             throw new CustomException(ErrorCode.ALREADY_SUBSCRIBED);
         }
 
+        // billingKey 기반 자동결제 요청
+        PaymentResponse payment = tossPaymentsClient.requestAutoPayment(billing.getBillingKey(), customerKey);
+        if (!"DONE".equals(payment.getStatus())) {
+            throw new CustomException(ErrorCode.SERVER_ERROR);
+        }
+
+        // 구독 저장
         LocalDateTime now = LocalDateTime.now();
         subscriptionMapper.insertSubscription(
                 member.getUserId(),
