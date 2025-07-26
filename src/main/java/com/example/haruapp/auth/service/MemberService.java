@@ -2,6 +2,7 @@ package com.example.haruapp.auth.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.haruapp.auth.domain.Member;
 import com.example.haruapp.auth.dto.request.LoginRequest;
@@ -23,6 +24,7 @@ public class MemberService {
 
 	private final BCryptPasswordEncoder passwordEncoder;
 
+	@Transactional
 	public SignupResponse register(SignupRequest request) {
 
 		validateDuplicate(request.getEmail(), request.getNickname());
