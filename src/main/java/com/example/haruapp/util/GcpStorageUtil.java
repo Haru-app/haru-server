@@ -2,7 +2,6 @@ package com.example.haruapp.util;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.stereotype.Component;
@@ -36,7 +35,7 @@ public class GcpStorageUtil {
 
 	public String upload(MultipartFile file) {
 
-		String folder = "emotion/" + LocalDate.now();
+		String folder = "emotion";
 		String originalName = file.getOriginalFilename();
 		String extension = originalName.substring(originalName.lastIndexOf("."));
 		String filename = UUID.randomUUID() + extension;
