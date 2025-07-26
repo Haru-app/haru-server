@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectKey;
 
 import com.example.haruapp.auth.domain.Member;
 
@@ -20,7 +21,7 @@ public interface MemberMapper {
 
 	// 멤버 테이블에 회원 삽입
 	@Insert("INSERT INTO member (user_id, email, nickname, password) " +
-		"VALUES (member_seq.NEXTVAL, #{email}, #{nickname}, #{password})")
-	@Options(useGeneratedKeys = true, keyProperty = "userId")
+		"VALUES (#{userId}, #{email}, #{nickname}, #{password})")
+	@SelectKey(statement = "SELECT member_seq.NEXTVAL FROM dual", keyProperty = "userId", before = true, resultType = Long.class)
 	void insertMember(Member member);
 }
