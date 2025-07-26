@@ -6,4 +6,6 @@ import lombok.Data;
 public class EmotionResponse {
     private Long emotionId;
     private String emotionName;
+    private String emotionColor;
+    private String emotionDescription;
 }
