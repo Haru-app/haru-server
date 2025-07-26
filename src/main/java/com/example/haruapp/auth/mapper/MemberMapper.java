@@ -2,7 +2,6 @@ package com.example.haruapp.auth.mapper;
 
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 
@@ -24,4 +23,9 @@ public interface MemberMapper {
 		"VALUES (#{userId}, #{email}, #{nickname}, #{password})")
 	@SelectKey(statement = "SELECT member_seq.NEXTVAL FROM dual", keyProperty = "userId", before = true, resultType = Long.class)
 	void insertMember(Member member);
+
+	// 이메일로 유저 확인
+	@Select("SELECT * FROM member WHERE email = #{email}")
+	Member findByEmail(String email);
+
 }
