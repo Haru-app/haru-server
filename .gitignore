@@ -47,6 +47,4 @@ Thumbs.db
 # 6. Application properties
 # =====================
 application.properties
-application.yml
-application.yaml
 .env
