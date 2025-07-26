@@ -1,7 +1,6 @@
 package com.example.haruapp.emotion.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,7 @@ public class EmotionCardController {
 
 	private final EmotionCardService emotionCardService;
 
-	@PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping("/save")
 	public ResponseEntity<EmotionCardResponse> saveEmotion(
 		@RequestParam("comment") String comment,
 		@RequestParam("userId") Long userId,
@@ -30,17 +29,16 @@ public class EmotionCardController {
 		@RequestPart(value = "image", required = false) MultipartFile image
 	) {
 
-		if (comment == null || comment.trim().isEmpty()) {
-			return ResponseEntity.badRequest()
-				.body(new EmotionCardResponse(false, "코멘트는 필수 입력 항목입니다."));
-		}
 		try {
-			emotionCardService.saveEmotion(userId, courseId, comment, image);
+			String aiImageUrl = emotionCardService.saveEmotion(userId, courseId, comment, image);
 			return ResponseEntity.status(HttpStatus.CREATED)
-				.body(new EmotionCardResponse(true, "감정 정보가 저장되었습니다."));
+				.body(new EmotionCardResponse(true, "감정 정보가 저장되었습니다.", aiImageUrl));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-				.body(new EmotionCardResponse(false, e.getMessage()));
+				.body(new EmotionCardResponse(false, e.getMessage(), null));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(new EmotionCardResponse(false, "서버 오류 발생", null));
 		}
 	}
 }

@@ -14,3 +14,11 @@ mybatis:
 
 weather:
   key: ${WEATHER-API-KEY}
+
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
+
+openai:
+  api:
+    ket: ${OPENAI_API_KEY}

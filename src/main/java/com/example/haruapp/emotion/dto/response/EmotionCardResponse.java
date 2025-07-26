@@ -10,4 +10,6 @@ public class EmotionCardResponse {
 	private boolean status;
 
 	private String message;
+
+	private String aiImageUrl;
 }
