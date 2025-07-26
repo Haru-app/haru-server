@@ -96,6 +96,7 @@ public class MemberService {
 		verifyPassword(request.getPassword(), member.getPassword());
 
 		return new LoginResponse(
+			member.getUserId(),
 			member.getEmail(),
 			member.getNickname(),
 			"로그인에 성공했습니다."
