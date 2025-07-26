@@ -1,6 +1,6 @@
 package com.example.haruapp.emotion.dto.response;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,5 +13,5 @@ public class EmotionHistoryResponse {
 
 	private String emotionName;
 
-	private Date createdAt;
+	private Timestamp createdAt;
 }
