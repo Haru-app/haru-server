@@ -76,6 +76,14 @@ public class MemberService {
 		return new DuplicateCheckResponse(isDuplicated, message);
 	}
 
+	// 비밀번호 확인
+	private void verifyPassword(String inputPassword, String encodedPassword) {
+
+		if (!passwordEncoder.matches(inputPassword, encodedPassword)) {
+			throw new CustomException(ErrorCode.INVALID_INPUT);
+		}
+	}
+
 	public LoginResponse login(LoginRequest request) {
 
 		Member member = memberMapper.findByEmail(request.getEmail());
@@ -83,9 +91,10 @@ public class MemberService {
 		if (member == null) {
 			throw new CustomException(ErrorCode.INVALID_INPUT);
 		}
-		if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
-			throw new CustomException(ErrorCode.INVALID_INPUT);
-		}
+
+		// 비밀번호 확인
+		verifyPassword(request.getPassword(), member.getPassword());
+
 		return new LoginResponse(
 			member.getEmail(),
 			member.getNickname(),
