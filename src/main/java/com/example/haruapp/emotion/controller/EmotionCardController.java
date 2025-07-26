@@ -1,9 +1,11 @@
 package com.example.haruapp.emotion.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,11 +22,11 @@ public class EmotionCardController {
 
 	private final EmotionCardService emotionCardService;
 
-	@PostMapping("/save")
+	@PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<EmotionCardResponse> saveEmotion(
-		@RequestPart("comment") String comment,
-		@RequestPart("userId") Long userId,
-		@RequestPart("courseId") Long courseId,
+		@RequestParam("comment") String comment,
+		@RequestParam("userId") Long userId,
+		@RequestParam("courseId") Long courseId,
 		@RequestPart(value = "image", required = false) MultipartFile image
 	) {
 

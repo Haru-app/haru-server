@@ -1,6 +1,7 @@
 package com.example.haruapp.emotion.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.haruapp.emotion.mapper.EmotionCardMapper;
@@ -18,6 +19,7 @@ public class EmotionCardService {
 
 	private final GcpStorageUtil gcpStorageUtil;
 
+	@Transactional
 	public void saveEmotion(Long userId, Long courseId, String comment, MultipartFile image) {
 
 		String filePath = null;

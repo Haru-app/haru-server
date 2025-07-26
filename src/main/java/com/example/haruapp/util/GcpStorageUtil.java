@@ -1,5 +1,6 @@
 package com.example.haruapp.util;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -7,19 +8,31 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
 
-import lombok.RequiredArgsConstructor;
-
 @Component
-@RequiredArgsConstructor
 public class GcpStorageUtil {
 
-	private final Storage storage = StorageOptions.getDefaultInstance().getService();
-
 	private final String bucketName = "haru_image";
+
+	private Storage storage = StorageOptions.getDefaultInstance().getService();
+
+	public GcpStorageUtil() {
+
+		try {
+			this.storage = StorageOptions.newBuilder()
+				.setCredentials(ServiceAccountCredentials.fromStream(
+					new FileInputStream("src/main/resources/gcp-key.json")
+				))
+				.build()
+				.getService();
+		} catch (IOException e) {
+			throw new RuntimeException("GCP 인증 실패", e);
+		}
+	}
 
 	public String upload(MultipartFile file) {
 
