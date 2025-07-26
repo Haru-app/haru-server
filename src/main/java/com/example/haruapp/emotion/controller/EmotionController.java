@@ -49,10 +49,10 @@ public class EmotionController {
 
         Map<String, Double> result = emotionSimilarityService.calculateSimilarity(questionResultRequestList);
 
-        List<String> emotionTop2 = emotionSimilarityService.getTop2(result);
+        String emotionTop1 = emotionSimilarityService.getTop1(result);
 
         log.info("result {}", result);
 
-        return ResponseEntity.ok(emotionTop2);
+        return ResponseEntity.ok(emotionTop1);
     }
 }

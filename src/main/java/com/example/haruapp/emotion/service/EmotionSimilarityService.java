@@ -72,7 +72,7 @@ public class EmotionSimilarityService {
         return emotionScoreMap;
     }
 
-    public List<String> getTop2(Map<String, Double> result) {
+    public String getTop1(Map<String, Double> result) {
 
         return result.entrySet().stream()
 
@@ -80,10 +80,10 @@ public class EmotionSimilarityService {
 
                         Double.compare(b.getValue(), a.getValue())) // value 기준 내림차순 정렬
 
-                .limit(2) // 상위 count개만
+                .limit(1) // 상위 count개만
 
                 .map(Map.Entry::getKey) // 감정명(key)만 추출
 
-                .collect(Collectors.toList()); // 리스트로 반환
+                .toList().getFirst(); // 리스트로 반환
     }
 }
