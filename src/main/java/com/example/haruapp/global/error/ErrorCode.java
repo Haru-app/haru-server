@@ -16,6 +16,10 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예기치 못한 서버 오류입니다."),
     ACCESS_DENIED(HttpStatus.FORBIDDEN,"권한이 부족합니다." ),
 
+    // 회원가입에 사용
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
+    DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다.")
+
             ;
 
     // Member
