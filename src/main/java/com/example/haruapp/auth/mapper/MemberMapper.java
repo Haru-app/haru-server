@@ -11,11 +11,11 @@ import com.example.haruapp.auth.domain.Member;
 public interface MemberMapper {
 
 	// 중복 이메일 존재 여부 확인
-	@Select("SELECT COUNT(*) FROM member WHERE email = #{email}")
+	@Select("SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM member WHERE email = #{email}")
 	boolean existsByEmail(String email);
 
 	// 중복 닉네임 존재 여부 확인
-	@Select("SELECT COUNT(*) FROM member WHERE nickname = #{nickname}")
+	@Select("SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM member WHERE nickname = #{nickname}")
 	boolean existsByNickname(String nickname);
 
 	// 멤버 테이블에 회원 삽입
