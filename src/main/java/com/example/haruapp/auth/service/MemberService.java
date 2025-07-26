@@ -2,9 +2,9 @@ package com.example.haruapp.auth.service;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import com.example.haruapp.auth.domain.Member;
 import com.example.haruapp.auth.dto.request.SignupRequest;
+import com.example.haruapp.auth.dto.response.DuplicateCheckResponse;
 import com.example.haruapp.auth.dto.response.SignupResponse;
 import com.example.haruapp.auth.mapper.MemberMapper;
 import com.example.haruapp.global.error.CustomException;
@@ -53,4 +53,15 @@ public class MemberService {
 		);
 	}
 
+	public DuplicateCheckResponse checkEmailDuplicate(String email) {
+		boolean isDuplicated = memberMapper.existsByEmail(email);
+		String message = isDuplicated ? "이미 사용 중인 이메일입니다." : "사용 가능한 이메일입니다.";
+		return new DuplicateCheckResponse(isDuplicated, message);
+	}
+
+	public DuplicateCheckResponse checkNicknameDuplicate(String nickname) {
+		boolean isDuplicated = memberMapper.existsByNickname(nickname);
+		String message = isDuplicated ? "이미 사용 중인 닉네임입니다." : "사용 가능한 닉네임입니다.";
+		return new DuplicateCheckResponse(isDuplicated, message);
+	}
 }
