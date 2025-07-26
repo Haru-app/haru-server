@@ -80,7 +80,7 @@ public class MemberService {
 	private void verifyPassword(String inputPassword, String encodedPassword) {
 
 		if (!passwordEncoder.matches(inputPassword, encodedPassword)) {
-			throw new CustomException(ErrorCode.INVALID_INPUT);
+			throw new CustomException(ErrorCode.LOGIN_PASSWORD_MISMATCH);
 		}
 	}
 
@@ -89,7 +89,7 @@ public class MemberService {
 		Member member = memberMapper.findByEmail(request.getEmail());
 
 		if (member == null) {
-			throw new CustomException(ErrorCode.INVALID_INPUT);
+			throw new CustomException(ErrorCode.LOGIN_EMAIL_NOT_FOUND);
 		}
 
 		// 비밀번호 확인
