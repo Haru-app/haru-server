@@ -10,8 +10,8 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class PythonClient {
 
-//    public static final String PYTHON_API_URL = "http://3.35.210.83:8000/question/similarity-map";
-    public static final String PYTHON_API_URL = "http://localhost:8000/question/similarity-map";
+    public static final String PYTHON_API_URL = "http://34.47.100.34:8000/question/similarity-map";
+//    public static final String PYTHON_API_URL = "http://localhost:8000/question/similarity-map";
     private static final RestTemplate restTemplate = new RestTemplate();
 
     public static void callingPythonServer() {
