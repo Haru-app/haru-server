@@ -54,3 +54,4 @@ jobs:
                        --env-file /backend.env \
                        parkjunhyeon/haru-server:${{ github.sha }}"
           
+
