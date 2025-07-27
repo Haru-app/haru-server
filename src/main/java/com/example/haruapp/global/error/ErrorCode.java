@@ -15,6 +15,7 @@ public enum ErrorCode {
 	JSON_CONVERT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 파싱 실패"),
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예기치 못한 서버 오류입니다."),
 	ACCESS_DENIED(HttpStatus.FORBIDDEN, "권한이 부족합니다."),
+	REQUIRE_LOGIN(HttpStatus.UNAUTHORIZED, "해당 기능을 사용하려면 로그인이 필요합니다."),
 
 	// 회원가입에 사용
 	DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
