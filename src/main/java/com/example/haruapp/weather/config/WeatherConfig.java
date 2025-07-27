@@ -1,5 +1,6 @@
 package com.example.haruapp.weather.config;
 
+import com.example.haruapp.global.repository.RedisRepository;
 import com.example.haruapp.weather.service.AIService;
 import com.example.haruapp.weather.service.WeatherApiClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,9 +15,9 @@ public class WeatherConfig {
     private String weatherKey;
 
     @Bean
-    public WeatherApiClient weatherApiClient(AIService aiService) {
+    public WeatherApiClient weatherApiClient(AIService aiService, RedisRepository redisRepository) {
         RestTemplate restTemplate = new RestTemplate();
 
-        return new WeatherApiClient(restTemplate, weatherKey,aiService);
+        return new WeatherApiClient(restTemplate, weatherKey,aiService,redisRepository);
     }
 }

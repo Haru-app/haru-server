@@ -52,6 +52,8 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-crypto'
 
 	implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 tasks.named('test') {
