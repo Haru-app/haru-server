@@ -29,9 +29,9 @@ jobs:
           push: true
           tags: parkjunhyeon/haru-server:${{ github.sha }}
 
-      - name: Save short SHA
+      - name: Extract short SHA
         id: vars
-        run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+        run: echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
 
       - name: Set up gcloud CLI
         uses: google-github-actions/setup-gcloud@v1
@@ -42,16 +42,15 @@ jobs:
 
       - name: Deploy to GCP VM via IAP
         run: |
+          IMAGE_TAG=parkjunhyeon/haru-server:${{ github.sha }}
           gcloud compute ssh haru-server \
-          --zone=asia-northeast3-c \
-          --tunnel-through-iap \
-          --command="docker pull parkjunhyeon/haru-server:${{ github.sha }} && \
-                     docker stop haru-server || true && \
-                     docker rm haru-server || true && \
-                     docker run -d -p 8080:8080 \
-                       --name haru-server \
-                       -e TZ=Asia/Seoul \
-                       --env-file /backend.env \
-                       parkjunhyeon/haru-server:${{ github.sha }}"
-          
-
+            --zone=asia-northeast3-c \
+            --tunnel-through-iap \
+            --command="docker pull $IMAGE_TAG && \
+                       docker stop haru-server || true && \
+                       docker rm haru-server || true && \
+                       docker run -d -p 8080:8080 \
+                         --name haru-server \
+                         -e TZ=Asia/Seoul \
+                         --env-file /backend.env \
+                         $IMAGE_TAG"
