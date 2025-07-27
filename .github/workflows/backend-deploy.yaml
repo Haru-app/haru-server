@@ -1,0 +1,54 @@
+name: CI/CD - Build Docker & Deploy to GCP VM
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: parkjunhyeon/haru-server:${{ github.sha }}
+
+      - name: Save short SHA
+        id: vars
+        run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+      - name: Set up gcloud CLI
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          service_account_key: ${{ secrets.GCP_KEY }}
+          project_id: ${{ secrets.GCP_ID }}
+
+      - name: Deploy to GCP VM via IAP
+        run: |
+          gcloud compute ssh haru-server \
+          --zone=asia-northeast3-a \ # 예시
+          --tunnel-through-iap \
+          --command="docker pull parkjunhyeon/haru-server:${{ github.sha }} && \
+                     docker stop haru-server || true && \
+                     docker rm haru-server || true && \
+                     docker run -d -p 8080:8080 \
+                       --name haru-server \
+                       -e TZ=Asia/Seoul \
+                       --env-file /backend.env \
+                       parkjunhyeon/haru-server:${{ github.sha }}"
