@@ -1,5 +1,5 @@
 # 1) Builder 스테이지: 표준 JDK (멀티아키 지원)
-FROM eclipse-temurin:17-jdk AS builder
+FROM eclipse-temurin:21-jdk AS builder
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ COPY . .
 RUN ./gradlew bootJar -x test --no-daemon --stacktrace
 
 # 2) Runtime 스테이지: 표준 JRE (멀티아키 지원)
-FROM eclipse-temurin:17-jre
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
