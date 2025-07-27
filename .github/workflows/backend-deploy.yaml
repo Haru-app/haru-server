@@ -42,7 +42,7 @@ jobs:
       - name: Deploy to GCP VM via IAP
         run: |
           gcloud compute ssh haru-server \
-          --zone=asia-northeast3-a \ # 예시
+          --zone=asia-northeast3-a \
           --tunnel-through-iap \
           --command="docker pull parkjunhyeon/haru-server:${{ github.sha }} && \
                      docker stop haru-server || true && \
