@@ -1,17 +1,18 @@
-# ====================
-# Stage 1: Build stage
-# ====================
+# 1) Builder 스테이지: 표준 JDK (멀티아키 지원)
 FROM eclipse-temurin:17-jdk AS builder
 
 WORKDIR /app
 
-# gradle wrapper 및 의존성 캐시 관련 파일 복사
-COPY gradlew settings.gradle build.gradle ./
-COPY gradle ./gradle
+# Gradle Wrapper 복사 & 실행권한 부여
+COPY gradlew .
+COPY gradle gradle
 RUN chmod +x gradlew
-RUN chmod +x ./gradlew
 
-# ✅ 전체 소스 복사 후 빌드
+# build.gradle, settings.gradle 복사 → 의존성 캐시
+COPY build.gradle settings.gradle ./
+RUN ./gradlew dependencies --no-daemon
+
+# 전체 소스 복사 & JAR 생성
 COPY . .
 RUN ./gradlew bootJar -x test --no-daemon --stacktrace
 
