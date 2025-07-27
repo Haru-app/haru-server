@@ -5,19 +5,15 @@ FROM eclipse-temurin:17-jdk AS builder
 
 WORKDIR /app
 
-# ✅ Gradle Wrapper 복사 (gradlew, gradle 디렉토리 포함!)
+# gradle wrapper 및 의존성 캐시 관련 파일 복사
 COPY gradlew settings.gradle build.gradle ./
 COPY gradle ./gradle
-
-# ✅ 실행 권한 부여
 RUN chmod +x gradlew
-
-# ✅ 의존성 캐시
-RUN ./gradlew dependencies --no-daemon || true
+RUN chmod +x ./gradlew
 
 # ✅ 전체 소스 복사 후 빌드
 COPY . .
-RUN ./gradlew clean build -x test --no-daemon
+RUN ./gradlew bootJar -x test --no-daemon
 
 # 2) Runtime 스테이지: 표준 JRE (멀티아키 지원)
 FROM eclipse-temurin:17-jre
