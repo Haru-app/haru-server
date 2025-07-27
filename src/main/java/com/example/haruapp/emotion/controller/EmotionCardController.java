@@ -1,7 +1,10 @@
 package com.example.haruapp.emotion.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.haruapp.emotion.dto.response.EmotionCardResponse;
+import com.example.haruapp.emotion.dto.response.EmotionCardUrlResponse;
 import com.example.haruapp.emotion.service.EmotionCardService;
 
 import lombok.RequiredArgsConstructor;
@@ -40,5 +44,15 @@ public class EmotionCardController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 				.body(new EmotionCardResponse(false, "서버 오류 발생", null));
 		}
+	}
+
+	@GetMapping("/card-urls")
+	public ResponseEntity<List<EmotionCardUrlResponse>> getEmotionCardUrls(
+		@RequestParam Long userId,
+		@RequestParam Long courseId
+	) {
+
+		List<EmotionCardUrlResponse> urls = emotionCardService.getEmotionCardUrls(userId, courseId);
+		return ResponseEntity.ok(urls);
 	}
 }

@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.haruapp.emotion.dto.response.EmotionCardUrlResponse;
 import com.example.haruapp.emotion.mapper.EmotionCardMapper;
 import com.example.haruapp.util.GcpStorageUtil;
 
@@ -65,6 +67,11 @@ public class EmotionCardService {
 		String imageUrl = gcpStorageUtil.uploadBase64Image(base64);
 		emotionCardMapper.insertEmotionCard(userId, courseId, imageUrl);
 		return imageUrl;
+	}
+
+	public List<EmotionCardUrlResponse> getEmotionCardUrls(Long userId, Long courseId) {
+
+		return emotionCardMapper.findEmotionCardUrls(userId, courseId);
 	}
 }
 
