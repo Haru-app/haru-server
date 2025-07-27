@@ -10,7 +10,7 @@ import com.example.haruapp.auth.dto.request.SignupRequest;
 import com.example.haruapp.auth.dto.response.DuplicateCheckResponse;
 import com.example.haruapp.auth.dto.response.LoginResponse;
 import com.example.haruapp.auth.dto.response.SignupResponse;
-import com.example.haruapp.auth.mapper.MemberMapper;
+import com.example.haruapp.auth.mapper.AuthMapper;
 import com.example.haruapp.global.error.CustomException;
 import com.example.haruapp.global.error.ErrorCode;
 
@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberService {
 
-	private final MemberMapper memberMapper;
+	private final AuthMapper authMapper;
 
 	private final BCryptPasswordEncoder passwordEncoder;
 
@@ -30,7 +30,7 @@ public class MemberService {
 		validateDuplicate(request.getEmail(), request.getNickname());
 
 		Member member = toEntity(request);
-		memberMapper.insertMember(member);
+		authMapper.insertMember(member);
 
 		return toResponse(member);
 	}
@@ -38,10 +38,10 @@ public class MemberService {
 	// 중복 회원 검사
 	private void validateDuplicate(String email, String nickname) {
 
-		if (memberMapper.existsByEmail(email)) {
+		if (authMapper.existsByEmail(email)) {
 			throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
 		}
-		if (memberMapper.existsByNickname(nickname)) {
+		if (authMapper.existsByNickname(nickname)) {
 			throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
 		}
 	}
@@ -66,14 +66,14 @@ public class MemberService {
 
 	public DuplicateCheckResponse checkEmailDuplicate(String email) {
 
-		boolean isDuplicated = memberMapper.existsByEmail(email);
+		boolean isDuplicated = authMapper.existsByEmail(email);
 		String message = isDuplicated ? "이미 사용 중인 이메일입니다." : "사용 가능한 이메일입니다.";
 		return new DuplicateCheckResponse(isDuplicated, message);
 	}
 
 	public DuplicateCheckResponse checkNicknameDuplicate(String nickname) {
 
-		boolean isDuplicated = memberMapper.existsByNickname(nickname);
+		boolean isDuplicated = authMapper.existsByNickname(nickname);
 		String message = isDuplicated ? "이미 사용 중인 닉네임입니다." : "사용 가능한 닉네임입니다.";
 		return new DuplicateCheckResponse(isDuplicated, message);
 	}
@@ -88,7 +88,7 @@ public class MemberService {
 
 	public LoginResponse login(LoginRequest request) {
 
-		Member member = memberMapper.findByEmail(request.getEmail());
+		Member member = authMapper.findByEmail(request.getEmail());
 
 		if (member == null) {
 			throw new CustomException(ErrorCode.LOGIN_EMAIL_NOT_FOUND);

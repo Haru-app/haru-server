@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.SelectKey;
 import com.example.haruapp.auth.domain.Member;
 
 @Mapper
-public interface MemberMapper {
+public interface AuthMapper {
 
 	// 중복 이메일 존재 여부 확인
 	@Select("SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END FROM member WHERE email = #{email}")
