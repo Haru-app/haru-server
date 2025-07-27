@@ -57,11 +57,11 @@ jobs:
             --zone=asia-northeast3-c \
             --tunnel-through-iap \
             --command="docker pull $IMAGE_TAG && \
-                       docker stop haru-server || true && \
-                       docker rm haru-server || true && \
-                       docker run -d -p 8080:8080 \
-                       --name haru-server \
-                       --restart always \
-                       -e TZ=Asia/Seoul \
-                       --env-file /home/mapharu00/backend.env \
-                       $IMAGE_TAG
+              docker stop haru-server || true && \
+              docker rm haru-server || true && \
+              docker run -d -p 8080:8080 \
+                --name haru-server \
+                --restart always \
+                -e TZ=Asia/Seoul \
+                --env-file /home/mapharu00/backend.env \
+                $IMAGE_TAG"
