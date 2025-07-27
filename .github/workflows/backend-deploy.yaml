@@ -43,13 +43,12 @@ jobs:
 
       - name: Activate service account
         run: |
-          gcloud auth activate-service-account ${{ secrets.GCP_EMAIL }} \
-            --key-file=${{ secrets.GCP_KEY }}
+          echo '${{ secrets.GCP_KEY }}' > key.json
+          gcloud auth activate-service-account ${{ secrets.GCP_EMAIL }} --key-file=key.json
 
       - name: Set active account
         run: |
           gcloud config set account ${{ secrets.GCP_EMAIL }}
-
 
       - name: Deploy to GCP VM via IAP
         run: |
