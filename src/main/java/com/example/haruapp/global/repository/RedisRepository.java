@@ -19,6 +19,10 @@ public class RedisRepository {
     }
 
     public void setWeather(String baseDate,String baseTime,String weather) {
-        redisTemplate.opsForValue().set(baseDate+baseTime, weather, Duration.ofMinutes(30));
+        redisTemplate.opsForValue().set(baseDate + baseTime, weather, Duration.ofMinutes(30));
+    }
+
+    public String getSimilarityMap(String key) {
+        return redisTemplate.opsForValue().get(key);
     }
 }
