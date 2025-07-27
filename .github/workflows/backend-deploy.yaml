@@ -52,3 +52,4 @@ jobs:
                        -e TZ=Asia/Seoul \
                        --env-file /backend.env \
                        parkjunhyeon/haru-server:${{ github.sha }}"
+          
