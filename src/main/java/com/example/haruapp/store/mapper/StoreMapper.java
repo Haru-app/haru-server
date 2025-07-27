@@ -37,9 +37,12 @@ public interface StoreMapper {
             "  </if>",
             "</where>",
             "ORDER BY store_name",
+            "OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY",
             "</script>"
     })
     List<StoreSearchResponse> findStores(@Param("categories") List<String> categories,
-                                         @Param("keyword") String keyword);
+                                         @Param("keyword") String keyword,
+                                         @Param("offset") int offset,
+                                         @Param("size") int size);
 
 }

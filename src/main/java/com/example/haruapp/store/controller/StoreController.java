@@ -32,13 +32,17 @@ public class StoreController {
      * - 카테고리별 매장 리스트 검색
      * - 매장 이름으로 검색
      * - 카테고리 + 매장 검색
+     * - 페이지 기반 페이지네이션
+     * - 페이지 당 매장 수 5로 고정
      * */
     @GetMapping
     public ResponseEntity<List<StoreSearchResponse>> searchStores(
             @RequestParam(required = false) String category,
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String keyword,
+            @RequestParam(defaultValue = "0") int page
     ) {
-        List<StoreSearchResponse> result = storeService.searchStores(category, keyword);
+        int size = 5;
+        List<StoreSearchResponse> result = storeService.searchStores(category, keyword, page, size);
         return ResponseEntity.ok(result);
     }
 }

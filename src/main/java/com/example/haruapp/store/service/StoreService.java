@@ -45,11 +45,12 @@ public class StoreService {
      * - 매장 이름으로 검색
      * - 카테고리 + 매장 검색
      * */
-    public List<StoreSearchResponse> searchStores(String category, String keyword) {
+    public List<StoreSearchResponse> searchStores(String category, String keyword, int page, int size) {
         List<String> rawCategories = null;
         if (category != null && CATEGORY_MAP.containsKey(category)) {
             rawCategories = CATEGORY_MAP.get(category);
         }
-        return storeMapper.findStores(rawCategories, keyword);
+        int offset = page * size;
+        return storeMapper.findStores(rawCategories, keyword, offset, size);
     }
 }
