@@ -52,7 +52,7 @@ jobs:
 
       - name: Deploy to GCP VM via IAP
         run: |
-          IMAGE_TAG=parkjunhyeon/haru-server:ec80ea81a123617b32ff847962d11f8a17a98a8b0a2d887674479f897b020080
+          IMAGE_TAG=parkjunhyeon/haru-server:8acff701cb0a63548cfbece4ff41ea0ff3199a68
           gcloud compute ssh haru-server \
             --zone=asia-northeast3-c \
             --tunnel-through-iap \
