@@ -33,7 +33,9 @@ public enum ErrorCode {
   COURSE_STORE_COUNT_INVALID(HttpStatus.BAD_REQUEST, "코스별 매장 개수는 6개여야 합니다."),
   COURSE_UPDATE_UNAUTHORIZED(HttpStatus.FORBIDDEN, "본인 코스만 수정할 수 있습니다."),
   COURSE_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 코스가 존재하지 않습니다."),
-  COURSE_SCRAP_SELF(HttpStatus.BAD_REQUEST, "본인 코스는 스크랩할 수 없습니다.")
+  COURSE_SCRAP_SELF(HttpStatus.BAD_REQUEST, "본인 코스는 스크랩할 수 없습니다."),
+    PARSE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "날씨 파싱에러"),
+    WEATHERAPI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"날씨 api 서버에러" );
 
             ;
 	// Member
