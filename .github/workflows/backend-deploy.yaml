@@ -22,10 +22,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Set active account
-        run: |
-          gcloud config set account ${{ secrets.GCP_EMAIL }}
-
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -44,6 +40,11 @@ jobs:
           service_account_key: ${{ secrets.GCP_KEY }}
           project_id: ${{ secrets.GCP_ID }}
           export_default_credentials: true
+
+      - name: Set active account
+        run: |
+          gcloud config set account ${{ secrets.GCP_EMAIL }}
+
 
       - name: Deploy to GCP VM via IAP
         run: |
