@@ -13,7 +13,7 @@ RUN chmod +x ./gradlew
 
 # ✅ 전체 소스 복사 후 빌드
 COPY . .
-RUN ./gradlew bootJar -x test --no-daemon
+RUN ./gradlew bootJar -x test --no-daemon --stacktrace
 
 # 2) Runtime 스테이지: 표준 JRE (멀티아키 지원)
 FROM eclipse-temurin:17-jre
