@@ -64,3 +64,4 @@ jobs:
                          -e TZ=Asia/Seoul \
                          --env-file /home/mapharu00/.backend.env \
                          $IMAGE_TAG"
+
