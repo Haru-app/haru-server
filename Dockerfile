@@ -14,7 +14,7 @@ RUN ./gradlew dependencies --no-daemon
 
 # 전체 소스 복사 & JAR 생성
 COPY . .
-RUN ./gradlew bootJar -x test --no-daemon --stacktrace
+RUN ./gradlew bootJar -x test --no-daemon
 
 # 2) Runtime 스테이지: 표준 JRE (멀티아키 지원)
 FROM eclipse-temurin:21-jre
