@@ -8,9 +8,14 @@ spring:
     driver-class-name: oracle.jdbc.OracleDriver
 
 mybatis:
+  mapper-locations: classpath:/mappers/**/*.xml
   type-aliases-package: org.example.haruapp
   configuration:
     map-underscore-to-camel-case: true
 
 weather:
   key: ${WEATHER-API-KEY}
+
+toss:
+  mid: ${TOSS_MID}
+  secret-key: ${TOSS_SECRET_KEY}

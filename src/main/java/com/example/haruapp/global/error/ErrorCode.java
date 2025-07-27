@@ -20,6 +20,10 @@ public enum ErrorCode {
 	DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
 	DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "이미 존재하는 닉네임입니다."),
 
+  ALREADY_SUBSCRIBED(HttpStatus.CONFLICT, "이미 구독된 사용자입니다."),
+  USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
+  TOSS_PAYMENT_FAILED(HttpStatus.BAD_GATEWAY, "토스 결제 URL 생성에 실패했습니다."),
+
 	// 로그인에 사용
 	LOGIN_EMAIL_NOT_FOUND(HttpStatus.UNAUTHORIZED, "존재하지 않는 이메일입니다."),
 	LOGIN_PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
@@ -30,6 +34,7 @@ public enum ErrorCode {
   COURSE_UPDATE_UNAUTHORIZED(HttpStatus.FORBIDDEN, "본인 코스만 수정할 수 있습니다."),
   COURSE_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 코스가 존재하지 않습니다."),
   COURSE_SCRAP_SELF(HttpStatus.BAD_REQUEST, "본인 코스는 스크랩할 수 없습니다.")
+
             ;
 	// Member
 	private final HttpStatus status;
