@@ -10,10 +10,11 @@ import java.util.List;
 @Mapper
 public interface SubscriptionMapper {
 
-    @Select("SELECT * " +
-            "FROM SUBSCRIPTION " +
-            "WHERE USER_ID = #{userId} AND STATUS = 'ACTIVE'")
-    Subscription findByUserId(@Param("userId") Long userId);
+    @Select("SELECT * FROM SUBSCRIPTION " +
+            "WHERE USER_ID = #{userId} AND STATUS = 'ACTIVE' " +
+            "ORDER BY STARTED_AT DESC " +
+            "FETCH FIRST 1 ROWS ONLY")
+    Subscription findLatestActiveByUserId(@Param("userId") Long userId);
 
     @Insert("INSERT INTO SUBSCRIPTION " +
             "(SUBSCRIPTION_ID, USER_ID, BILLING_KEY, STATUS, STARTED_AT, EXPIRES_AT, NEXT_PAYMENT_AT) " +
@@ -44,5 +45,10 @@ public interface SubscriptionMapper {
             "SET IS_AUTO_RENEW = 'N', STATUS = 'CANCELLED', CANCELLED_AT = CURRENT_TIMESTAMP " +
             "WHERE USER_ID = #{userId} AND SUBSCRIPTION_ID = #{subscriptionId}")
     void cancelSubscription(@Param("userId") Long userId, @Param("subscriptionId") Long subscriptionId);
+
+    @Update("UPDATE SUBSCRIPTION " +
+            "SET IS_AUTO_RENEW = 'Y', STATUS = 'ACTIVE', CANCELLED_AT = NULL " +
+            "WHERE SUBSCRIPTION_ID = #{subscriptionId}")
+    void updateStatusToActive(@Param("subscriptionId") Long subscriptionId);
 
 }

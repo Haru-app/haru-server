@@ -38,9 +38,13 @@ public class SubscriptionService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        Subscription subscription = subscriptionMapper.findByUserId(userId);
+        Subscription subscription = subscriptionMapper.findLatestActiveByUserId(userId);
         if (subscription != null && subscription.getBillingKey() != null) {
             throw new CustomException(ErrorCode.ALREADY_SUBSCRIBED);
+        }
+        if ("CANCELLED".equals(subscription.getStatus()) &&
+                subscription.getExpiresAt().isAfter(LocalDate.now())) {    // 만료 전 구독 취소 → 만료 전 다시 재결제
+            subscriptionMapper.updateStatusToActive(subscription.getSubscriptionId());
         }
 
         // customerKey가 있는 경우
@@ -55,19 +59,19 @@ public class SubscriptionService {
     }
 
     public void confirmBillingKey(String authKey, String customerKey) {
-        //  Toss에 billingKey 요청
-        BillingResponse billing = tossPaymentsClient.requestBillingKey(authKey, customerKey);
-
         Member member = memberMapper.findByCustomerKey(customerKey);
         if (member == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
         // 기존 구독 존재 여부 확인
-        Subscription sub = subscriptionMapper.findByUserId(member.getUserId());
+        Subscription sub = subscriptionMapper.findLatestActiveByUserId(member.getUserId());
         if (sub != null && sub.getBillingKey() != null) {
             throw new CustomException(ErrorCode.ALREADY_SUBSCRIBED);
         }
+
+        //  Toss에 billingKey 요청
+        BillingResponse billing = tossPaymentsClient.requestBillingKey(authKey, customerKey);
 
         // billingKey 기반 자동결제 요청
         PaymentResponse payment = tossPaymentsClient.requestAutoPayment(billing.getBillingKey(), customerKey);
