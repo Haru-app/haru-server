@@ -77,4 +77,9 @@ public class SubscriptionService {
         );
     }
 
+    public void cancelSubscription(Long userId) {
+        Long subscriptionId = subscriptionMapper.findLatestSubscriptionIdByUserId(userId);
+        subscriptionMapper.cancelSubscription(userId, subscriptionId);
+    }
+
 }

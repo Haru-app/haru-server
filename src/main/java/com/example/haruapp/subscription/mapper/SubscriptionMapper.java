@@ -42,4 +42,18 @@ public interface SubscriptionMapper {
             "WHERE USER_ID = #{userId} AND S.IS_AUTO_RENEW = 'Y' AND S.STATUS = 'ACTIVE' AND NEXT_PAYMENT_AT = #{today}")
     void markPaymentFailed(@Param("userId") Long userId, @Param("today") LocalDateTime today);
 
+    // 가장 최근 구독
+    @Select("SELECT * FROM (" +
+            "SELECT SUBSCRIPTION_ID " +
+            "FROM SUBSCRIPTION " +
+            "WHERE USER_ID = #{userId} AND IS_AUTO_RENEW = 'Y' AND S.STATUS = 'ACTIVE' " +
+            "ORDER BY STARTED_AT DESC" +
+            ") WHERE ROWNUM = 1")
+    Long findLatestSubscriptionIdByUserId(@Param("userId") Long userId);
+
+    @Update("UPDATE SUBSCRIPTION " +
+            "SET IS_AUTO_RENEW = 'N', STATUS = 'CANCELLED', CANCELLED_AT = CURRENT_TIMESTAMP " +
+            "WHERE USER_ID = #{userId} AND SUBSCRIPTION = #{subscriptionId}")
+    void cancelSubscription(@Param("userId") Long userId, @Param("subscriptionId")Long subscriptionId);
+
 }
