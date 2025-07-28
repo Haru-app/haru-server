@@ -32,13 +32,13 @@ public class EmotionCardService {
 	@Transactional
 	public String saveEmotion(Long userId, Long courseId, String comment, MultipartFile image)  {
 		try {
-			BufferedImage frame = ImageIO.read(getClass().getResourceAsStream("/frame/sunny.png"));
+			BufferedImage frame = ImageIO.read(getClass().getResourceAsStream("/static/frame/sunny.png"));
 			BufferedImage userImage;
 
 			if (image != null && !image.isEmpty()) {
 				userImage = ImageIO.read(image.getInputStream());
 			} else {
-				userImage = ImageIO.read(getClass().getResourceAsStream("/frame/default.png"));
+				userImage = ImageIO.read(getClass().getResourceAsStream("/static/frame/default.png"));
 			}
 
 			int frameWidth = frame.getWidth();
