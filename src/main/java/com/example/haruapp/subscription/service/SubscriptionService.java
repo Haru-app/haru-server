@@ -72,6 +72,7 @@ public class SubscriptionService {
         subscriptionMapper.insertSubscription(
                 member.getUserId(),
                 billing.getBillingKey(),
+                "ACTIVE",
                 now,
                 now.plusMonths(1),
                 now.plusMonths(1)

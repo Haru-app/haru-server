@@ -28,6 +28,7 @@ public class SubscriptionSchedulerService {
                 subscriptionMapper.insertSubscription(
                         target.getUserId(),
                         target.getBillingKey(),
+                        "ACTIVE",
                         now,
                         now.plusMonths(1),
                         now.plusMonths(1)
@@ -35,7 +36,14 @@ public class SubscriptionSchedulerService {
                 log.info("자동결제 성공: {}", target.getUserId());
             } catch (Exception e) {
                 log.warn("자동결제 실패: {} - {}", target.getUserId(), e.getMessage());
-                subscriptionMapper.markPaymentFailed(target.getUserId(), now);
+                subscriptionMapper.insertSubscription(
+                        target.getUserId(),
+                        target.getBillingKey(),
+                        "FAILED",
+                        now,
+                        now.plusMonths(1),
+                        now.plusMonths(1)
+                );
                 // TODO 알림 보내기
             }
         }

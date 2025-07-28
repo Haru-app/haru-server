@@ -15,11 +15,12 @@ public interface SubscriptionMapper {
             "WHERE USER_ID = #{userId} AND STATUS = 'ACTIVE'")
     Subscription findByUserId(@Param("userId") Long userId);
 
-    @Insert("INSERT INTO SUBSCRIPTION " +
-            "(SUBSCRIPTION_ID, USER_ID, BILLING_KEY, STARTED_AT, EXPIRES_AT, NEXT_PAYMENT_AT) " +
-            "VALUES (SUBSCRIPTION_SEQ.NEXTVAL, #{userId}, #{billingKey}, #{startedAt}, #{expiresAt}, #{nextPaymentAt})")
+   @Insert("INSERT INTO SUBSCRIPTION " +
+            "(SUBSCRIPTION_ID, USER_ID, BILLING_KEY, STATUS, STARTED_AT, EXPIRES_AT, NEXT_PAYMENT_AT) " +
+            "VALUES (SUBSCRIPTION_SEQ.NEXTVAL, #{userId}, #{billingKey}, #{status}, #{startedAt}, #{expiresAt}, #{nextPaymentAt})")
     void insertSubscription(@Param("userId") Long userId,
                             @Param("billingKey") String billingKey,
+                            @Param("status") String status,
                             @Param("startedAt") LocalDate startedAt,
                             @Param("expiresAt") LocalDate expiresAt,
                             @Param("nextPaymentAt") LocalDate nextPaymentAt);
