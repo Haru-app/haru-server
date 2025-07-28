@@ -1,10 +1,12 @@
 package com.example.haruapp.store.controller;
 
+import com.example.haruapp.store.dto.response.StoreResponse;
 import com.example.haruapp.store.dto.response.StoreSearchResponse;
 import com.example.haruapp.store.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,5 +46,16 @@ public class StoreController {
         int size = 5;
         List<StoreSearchResponse> result = storeService.searchStores(category, keyword, page, size);
         return ResponseEntity.ok(result);
+    }
+
+    /**
+     * 코스 내 매장 목록 조회
+     */
+    @GetMapping("/by-course/{courseId}")
+    public ResponseEntity<List<StoreResponse>> getStoresInCourse(
+            @PathVariable("courseId") Long courseId
+    ) {
+        List<StoreResponse> stores = storeService.getStoresInCourse(courseId);
+        return ResponseEntity.ok(stores);
     }
 }
