@@ -17,10 +17,14 @@ public interface EmotionCardMapper {
 	void insertEmotionCard(Long userId, Long courseId, String filePath);
 
 	@Select("""
-			SELECT file_path as filePath
+			SELECT file_path AS filePath
 			FROM emotion_card
-			WHERE user_id = #{userId} AND course_id = #{courseId}
+			WHERE user_id = #{userId}
+			  AND TO_CHAR(created_at, 'YYYY-MM-DD') = #{date}
 			ORDER BY created_at DESC
 		""")
-	List<EmotionCardUrlResponse> findEmotionCardUrls(@Param("userId") Long userId, @Param("courseId") Long courseId);
+	List<EmotionCardUrlResponse> findEmotionCardUrlsByDate(
+		@Param("userId") Long userId,
+		@Param("date") String date
+	);
 }
