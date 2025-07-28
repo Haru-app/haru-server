@@ -2,6 +2,8 @@ package com.example.haruapp.subscription.service;
 
 import com.example.haruapp.global.error.CustomException;
 import com.example.haruapp.global.error.ErrorCode;
+import com.example.haruapp.global.model.MailType;
+import com.example.haruapp.global.service.MailService;
 import com.example.haruapp.member.domain.Member;
 import com.example.haruapp.member.mapper.MemberMapper;
 import com.example.haruapp.subscription.domain.Subscription;
@@ -10,12 +12,16 @@ import com.example.haruapp.subscription.dto.response.PaymentResponse;
 import com.example.haruapp.subscription.external.TossPaymentsClient;
 import com.example.haruapp.subscription.mapper.SubscriptionMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SubscriptionService {
@@ -24,6 +30,7 @@ public class SubscriptionService {
     private final SubscriptionMapper subscriptionMapper;
     private final TossPaymentsClient tossPaymentsClient;
     private final FcmService fcmService;
+    private final MailService mailService;
 
     public String getOrCreateCustomerKey(Long userId) {
         Member member = memberMapper.findById(userId);
@@ -84,6 +91,21 @@ public class SubscriptionService {
                 "HaRU 감정 카드 정기 구독 결제 완료 🎉",
                 "감정 카드를 생성해 보세요! \uD83D\uDCF8"
         );
+        sendSubscriptionSuccessEmail(member, now, now.plusMonths(1));
+    }
+
+    private void sendSubscriptionSuccessEmail(Member member, LocalDate startedAt, LocalDate expiresAt) {
+        try {
+            Map<String, Object> vars = new HashMap<>();
+            vars.put("username", member.getNickname());
+            vars.put("amount", "2,900");
+            vars.put("startedAt", startedAt.toString());
+            vars.put("expiresAt", expiresAt.toString());
+
+            mailService.sendMail(member.getEmail(), MailType.SUBSCRIPTION_COMPLETE, vars);
+        } catch (Exception e) {
+            log.warn("구독 완료 이메일 전송 실패: {}", e.getMessage());
+        }
     }
 
     @Transactional

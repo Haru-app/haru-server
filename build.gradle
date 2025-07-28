@@ -38,7 +38,6 @@ dependencyManagement {
 
 
 dependencies {
-	implementation 'com.google.firebase:firebase-admin:9.2.0'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 //	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -55,6 +54,9 @@ dependencies {
 	implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	implementation("org.springframework.boot:spring-boot-starter-mail")
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
 }
 
 tasks.named('test') {
