@@ -24,7 +24,7 @@ public class GcpStorageUtil {
 		try {
 			this.storage = StorageOptions.newBuilder()
 				.setCredentials(ServiceAccountCredentials.fromStream(
-					new FileInputStream("/app/resource/firebase/haru-firebase-key.json")
+					new FileInputStream("/app/resource/gcp-key.json")
 				))
 				.build()
 				.getService();
