@@ -17,6 +17,7 @@ public class SubscriptionSchedulerService {
 
     private final SubscriptionMapper subscriptionMapper;
     private final TossPaymentsClient tossPaymentsClient;    // billingKey 결제 요청용
+    private final FcmService fcmService;
 
     public void executeScheduledPayments() {
         LocalDate now = LocalDate.now();
@@ -33,6 +34,11 @@ public class SubscriptionSchedulerService {
                         now.plusMonths(1),
                         now.plusMonths(1)
                 );
+                fcmService.sendNotification(
+                        target.getUserId(),
+                        "HaRU 감정 카드 정기 구독 결제 완료 🎉",
+                        "감정 카드를 생성해 보세요! \uD83D\uDCF8"
+                );
                 log.info("자동결제 성공: {}", target.getUserId());
             } catch (Exception e) {
                 log.warn("자동결제 실패: {} - {}", target.getUserId(), e.getMessage());
@@ -44,7 +50,11 @@ public class SubscriptionSchedulerService {
                         now.plusMonths(1),
                         now.plusMonths(1)
                 );
-                // TODO 알림 보내기
+                fcmService.sendNotification(
+                        target.getUserId(),
+                        "HaRU 감정 카드 정기 구독 결제 실패 \uD83D\uDE25",
+                        "결제 수단을 다시 확인해 주세요!"
+                );
             }
         }
     }
