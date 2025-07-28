@@ -6,6 +6,10 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: oracle.jdbc.OracleDriver
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
   ai:
     openai:
@@ -39,6 +43,11 @@ mybatis:
 weather:
   key: ${WEATHER-API-KEY}
 
+gemini:
+  api:
+    key: ${GEMINI_API_KEY}
+    
 toss:
   mid: ${TOSS_MID}
   secret-key: ${TOSS_SECRET_KEY}
+

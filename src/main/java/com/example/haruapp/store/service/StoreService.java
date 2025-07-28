@@ -1,5 +1,8 @@
 package com.example.haruapp.store.service;
 
+import com.example.haruapp.global.error.CustomException;
+import com.example.haruapp.global.error.ErrorCode;
+import com.example.haruapp.store.dto.response.StoreResponse;
 import com.example.haruapp.store.dto.response.StoreSearchResponse;
 import com.example.haruapp.store.mapper.StoreMapper;
 import lombok.RequiredArgsConstructor;
@@ -55,5 +58,16 @@ public class StoreService {
         }
         int offset = page * size;
         return storeMapper.findStores(rawCategories, keyword, offset, size);
+    }
+
+    /**
+     * 코스 내 매장 목록 조회
+     */
+    public List<StoreResponse> getStoresInCourse(Long courseId) {
+        if (courseId == null) {
+            throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
+        }
+
+        return storeMapper.findStoresByCourseId(courseId);
     }
 }
