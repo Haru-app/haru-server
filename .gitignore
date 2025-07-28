@@ -46,5 +46,8 @@ Thumbs.db
 # =====================
 # 6. Application properties
 # =====================
-application.properties
+application-*.properties
 .env
+
+src/main/resources/gcp-key.json
+

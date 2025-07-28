@@ -5,7 +5,7 @@ import com.example.haruapp.emotion.mapper.EmotionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
+import com.example.haruapp.emotion.dto.response.EmotionHistoryResponse;
 import java.util.List;
 
 @Service
@@ -18,5 +18,10 @@ public class EmotionService {
     public List<EmotionResponse> getAllEmotionResponse() {
 
         return emotionMapper.findAllToEmotionResponse();
+    }
+  
+    public List<EmotionHistoryResponse> getEmotionsByUserIdAndDate(Long userId, int year, int month) {
+
+      return emotionMapper.findEmotionsByUserIdAndMonth(userId, year, month);
     }
 }

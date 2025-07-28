@@ -24,6 +24,17 @@ public class EmotionController {
     private final EmotionSimilarityService emotionSimilarityService;
     private final QuestionService questionService;
     private final EmotionService emotionService;
+  
+    @GetMapping("/emotion/list")
+    public ResponseEntity<List<EmotionHistoryResponse>> getEmotionHistory(
+      @RequestParam("userId") Long userId,
+      @RequestParam int year,
+      @RequestParam int month
+    ) {
+
+      List<EmotionHistoryResponse> result = emotionService.getEmotionsByUserIdAndDate(userId, year, month);
+      return ResponseEntity.ok(result);
+    }
 
     @GetMapping("/emotions")
     public ResponseEntity<List<EmotionResponse>> getEmotionQuestions() {
