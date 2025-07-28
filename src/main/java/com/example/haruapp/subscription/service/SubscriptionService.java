@@ -12,7 +12,7 @@ import com.example.haruapp.subscription.mapper.SubscriptionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -67,7 +67,7 @@ public class SubscriptionService {
         }
 
         // 구독 저장
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         subscriptionMapper.insertSubscription(
                 member.getUserId(),
                 billing.getBillingKey(),
