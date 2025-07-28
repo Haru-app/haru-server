@@ -1,6 +1,6 @@
-package com.example.haruapp.weather;
+package com.example.haruapp.weather.controller;
 
-import com.example.haruapp.weather.dto.WeatherForecastDto;
+import com.example.haruapp.weather.dto.WeatherResponse;
 import com.example.haruapp.weather.service.WeatherApiClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class WeatherTestController {
+public class WeatherController {
 
     private final WeatherApiClient weatherApiClient;
+
     @GetMapping("/weather")
     public ResponseEntity<?> weather() {
         String weatherSummary = weatherApiClient.getUltraShortForecast();
-        return ResponseEntity.ok(weatherSummary);
+
+        return ResponseEntity.ok(WeatherResponse.builder()
+                .weather(weatherSummary)
+                .build());
     }
 }

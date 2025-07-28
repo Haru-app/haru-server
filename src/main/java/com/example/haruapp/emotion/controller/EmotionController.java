@@ -3,6 +3,7 @@ package com.example.haruapp.emotion.controller;
 import com.example.haruapp.emotion.dto.EmotionQuestion;
 import com.example.haruapp.emotion.dto.EmotionResponse;
 import com.example.haruapp.emotion.dto.request.QuestionResultRequest;
+import com.example.haruapp.emotion.dto.response.EmotionTopResponse;
 import com.example.haruapp.emotion.service.EmotionService;
 import com.example.haruapp.emotion.service.EmotionSimilarityService;
 import com.example.haruapp.emotion.service.QuestionService;
@@ -27,7 +28,7 @@ public class EmotionController {
     @GetMapping("/emotions")
     public ResponseEntity<List<EmotionResponse>> getEmotionQuestions() {
 
-        List<EmotionResponse> emotionList =  emotionService.getAllEmotionResponse();
+        List<EmotionResponse> emotionList = emotionService.getAllEmotionResponse();
 
         return ResponseEntity.ok(emotionList);
     }
@@ -53,6 +54,9 @@ public class EmotionController {
 
         log.info("result {}", result);
 
-        return ResponseEntity.ok(emotionTop1);
+        return ResponseEntity.ok(EmotionTopResponse
+                .builder()
+                .emotion(emotionTop1)
+                .build());
     }
 }
