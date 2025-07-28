@@ -7,9 +7,6 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -18,9 +15,6 @@ import org.springframework.stereotype.Service;
 public class FcmService {
 
     private final FcmTokenMapper fcmTokenMapper;
-
-    @Value("${fcm.server.key}")
-    private String fcmServerKey;
 
     public void saveFcmToken(Long userId, String token) {
         if (token == null || token.isBlank()) {
@@ -36,10 +30,6 @@ public class FcmService {
         if (token == null || token.isBlank()) {
             throw new IllegalArgumentException("FCM 토큰은 비어 있을 수 없습니다.");
         }
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "key=" + fcmServerKey);
 
         Notification notification = Notification.builder()
                 .setTitle(title)
