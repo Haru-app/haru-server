@@ -17,13 +17,8 @@ public class FcmController {
 
     @PostMapping("/fcm-token")
     public ResponseEntity<Void> saveFcmToken(@RequestBody FcmTokenRequest request) {
-        try {
-            fcmService.saveFcmToken(request.getUserId(), request.getFcmToken());
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            log.warn("잘못된 FCM 토큰 요청: {}", e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
+        fcmService.saveFcmToken(request.getUserId(), request.getFcmToken());
+        return ResponseEntity.ok().build();
     }
 
 }
