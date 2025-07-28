@@ -7,6 +7,7 @@ import com.example.haruapp.course_command.dto.response.CourseListResponse;
 import com.example.haruapp.course_command.dto.request.CourseSaveRequest;
 import com.example.haruapp.course_command.dto.request.CourseUpdateRequest;
 import com.example.haruapp.course_command.service.CourseService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -70,6 +71,17 @@ public class CourseController {
 
         List<CourseListResponse> courses = courseService.getCoursesByLikes(userId);
         return ResponseEntity.ok(courses);
+    }
+
+    /**
+     * 내 코스 조회
+     */
+    @GetMapping("/my")
+    public ResponseEntity<List<CourseListResponse>> getMyCourses(
+        @RequestParam("userId") Long userId
+    ) {
+        List<CourseListResponse> myStores = courseService.getMyCourses(userId);
+        return ResponseEntity.ok(myStores);
     }
 
     /**

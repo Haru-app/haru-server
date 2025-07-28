@@ -123,7 +123,7 @@ public interface CourseMapper {
             AND user_like.USER_ID = #{userId}
         ORDER BY COALESCE(like_count.like_count, 0) DESC, c.CREATED_AT DESC
         """)
-        @Results(id = "CourseResult", value = {
+        @Results(id = "AllCoursesOrderByLikes", value = {
             @Result(column="courseId",       property="courseId"),
             @Result(column="title",          property="title"),
             @Result(column="emotionName",   property="emotionName"),
@@ -144,4 +144,59 @@ public interface CourseMapper {
 
     @Delete("DELETE FROM COURSE_LIKE WHERE COURSE_ID = #{courseId} AND USER_ID = #{userId}")
     void deleteCourseLike(@Param("courseId") Long courseId, @Param("userId") Long userId);
+
+    /**
+     * 내가 생성한 코스 목록을 조회한다.
+     * 최근에 생성한 코스가 우선순위를 가진다.
+     */
+    @Select("""
+        SELECT 
+            c.COURSE_ID as courseId,
+            c.TITLE as title,
+            e.EMOTION_NAME as emotionName,
+            c.WEATHER as weather,
+            c.USER_ID as userId,
+            m.NICKNAME as userNickname,
+            COALESCE(store_count.total_stores, 0) as totalStores,
+            COALESCE(like_count.like_count, 0) as likeCount,
+            CASE 
+                WHEN user_like.USER_ID IS NOT NULL THEN 1 
+                ELSE 0 
+            END as isLiked
+        FROM COURSE c
+        INNER JOIN MEMBER m ON c.USER_ID = m.USER_ID
+        INNER JOIN EMOTION e ON c.EMOTION_ID = e.EMOTION_ID
+        LEFT JOIN (
+            SELECT 
+                cs.COURSE_ID, 
+                COUNT(*) as total_stores
+            FROM COURSE_STORE cs
+            GROUP BY cs.COURSE_ID
+        ) store_count ON c.COURSE_ID = store_count.COURSE_ID
+        LEFT JOIN (
+            SELECT 
+                cl.COURSE_ID, 
+                COUNT(*) as like_count
+            FROM COURSE_LIKE cl
+            GROUP BY cl.COURSE_ID
+        ) like_count ON c.COURSE_ID = like_count.COURSE_ID
+        LEFT JOIN COURSE_LIKE user_like ON c.COURSE_ID = user_like.COURSE_ID 
+            AND user_like.USER_ID = #{userId}
+        WHERE c.USER_ID = #{userId}
+        ORDER BY c.CREATED_AT DESC
+        """)
+    @Results(id = "MyCourses", value = {
+        @Result(column="courseId",       property="courseId"),
+        @Result(column="title",          property="title"),
+        @Result(column="emotionName",   property="emotionName"),
+        @Result(column="weather",        property="weather"),
+        @Result(column="userId",         property="userId"),
+        @Result(column="userNickname",   property="userNickname"),
+        @Result(column="totalStores",    property="totalStores"),
+        @Result(column="likeCount",      property="likeCount"),
+        @Result(column="isLiked",        property="isLiked"),
+        @Result(property="storeNames", column="courseId", javaType = List.class,
+            many=@Many(select="findStoreNamesByCourseId"))
+    })
+    List<CourseListResponse> findMyCourses(@Param("userId") Long userId);
 }

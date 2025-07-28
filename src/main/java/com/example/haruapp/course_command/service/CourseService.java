@@ -152,4 +152,16 @@ public class CourseService {
 
 		courseMapper.deleteCourseLike(courseId, userId);
 	}
+
+	/**
+	 * 내 코스 목록 조회
+	 * @param userId 현재 로그인한 사용자 ID
+	 */
+	public List<CourseListResponse> getMyCourses(Long userId) {
+		if(userId == null) {
+			throw new CustomException(ErrorCode.REQUIRE_LOGIN);
+		}
+
+		return courseMapper.findMyCourses(userId);
+	}
 }
