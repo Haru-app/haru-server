@@ -42,7 +42,7 @@ public interface SubscriptionMapper {
     Long findLatestSubscriptionIdByUserId(@Param("userId") Long userId);
 
     @Update("UPDATE SUBSCRIPTION " +
-            "SET IS_AUTO_RENEW = 'N', STATUS = 'CANCELLED', CANCELLED_AT = CURRENT_TIMESTAMP " +
+            "SET BILLING_KEY = NULL, IS_AUTO_RENEW = 'N', STATUS = 'CANCELLED', CANCELLED_AT = CURRENT_TIMESTAMP " +
             "WHERE USER_ID = #{userId} AND SUBSCRIPTION_ID = #{subscriptionId}")
     void cancelSubscription(@Param("userId") Long userId, @Param("subscriptionId") Long subscriptionId);
 
