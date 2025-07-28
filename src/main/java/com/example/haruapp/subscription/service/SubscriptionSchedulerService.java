@@ -25,7 +25,6 @@ public class SubscriptionSchedulerService {
         for (SubscriptionPaymentTargetResponse target : dueList) {
             try {
                 tossPaymentsClient.requestAutoPayment(target.getBillingKey(), target.getCustomerKey());
-                subscriptionMapper.expireOldSubscription(target.getUserId(), now);
                 subscriptionMapper.insertSubscription(
                         target.getUserId(),
                         target.getBillingKey(),

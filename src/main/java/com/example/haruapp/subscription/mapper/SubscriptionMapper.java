@@ -30,12 +30,6 @@ public interface SubscriptionMapper {
             "WHERE S.IS_AUTO_RENEW = 'Y' AND S.STATUS = 'ACTIVE' AND S.NEXT_PAYMENT_AT = #{today}")
     List<SubscriptionPaymentTargetResponse> findPaymentTargets(@Param("today") LocalDate today);
 
-    // 기존 구독 EXPIRED 처리
-    @Update("UPDATE SUBSCRIPTION " +
-            "SET STATUS = 'EXPIRED' " +
-            "WHERE USER_ID = #{userId} AND IS_AUTO_RENEW = 'Y' AND STATUS = 'ACTIVE' AND NEXT_PAYMENT_AT = #{today}")
-    void expireOldSubscription(@Param("userId") Long userId, @Param("today") LocalDate today);
-
     // 실패 시 상태만 기록
     @Update("UPDATE SUBSCRIPTION " +
             "SET STAUTS = 'FAILED' " +
