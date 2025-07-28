@@ -3,6 +3,7 @@ package com.example.haruapp.emotion.controller;
 import com.example.haruapp.emotion.dto.EmotionQuestion;
 import com.example.haruapp.emotion.dto.EmotionResponse;
 import com.example.haruapp.emotion.dto.request.QuestionResultRequest;
+import com.example.haruapp.emotion.dto.response.EmotionHistoryResponse;
 import com.example.haruapp.emotion.dto.response.EmotionTopResponse;
 import com.example.haruapp.emotion.service.EmotionService;
 import com.example.haruapp.emotion.service.EmotionSimilarityService;
