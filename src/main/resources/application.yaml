@@ -29,3 +29,7 @@ weather:
 toss:
   mid: ${TOSS_MID}
   secret-key: ${TOSS_SECRET_KEY}
+
+fcm:
+  server:
+    key: ${FCM_SERVER_KEY}

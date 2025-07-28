@@ -48,3 +48,5 @@ Thumbs.db
 # =====================
 application.properties
 .env
+
+src/main/resources/firebase/haru-firebase-key.json

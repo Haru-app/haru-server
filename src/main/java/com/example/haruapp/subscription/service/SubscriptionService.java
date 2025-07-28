@@ -23,6 +23,7 @@ public class SubscriptionService {
     private final MemberMapper memberMapper;
     private final SubscriptionMapper subscriptionMapper;
     private final TossPaymentsClient tossPaymentsClient;
+    private final FcmService fcmService;
 
     public String getOrCreateCustomerKey(Long userId) {
         Member member = memberMapper.findById(userId);
@@ -76,6 +77,12 @@ public class SubscriptionService {
                 now,
                 now.plusMonths(1),
                 now.plusMonths(1)
+        );
+
+        fcmService.sendNotification(
+                member.getUserId(),
+                "HaRU 감정 카드 정기 구독 결제 완료 🎉",
+                "감정 카드를 생성해 보세요! \uD83D\uDCF8"
         );
     }
 
