@@ -25,4 +25,10 @@ public class SubscriptionController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> cancelSubscription(@PathVariable Long userId) {
+        subscriptionService.cancelSubscription(userId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

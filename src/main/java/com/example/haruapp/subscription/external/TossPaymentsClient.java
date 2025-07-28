@@ -14,7 +14,6 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
@@ -69,7 +68,6 @@ public class TossPaymentsClient {
         body.put("orderName", "HaRU 감정 카드 구독권 1개월");
 
         HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
-        String encodedBillingKey = URLEncoder.encode(billingKey, StandardCharsets.UTF_8);
         String url = "https://api.tosspayments.com/v1/billing/" + billingKey;
 
         try {

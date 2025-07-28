@@ -2,6 +2,8 @@ package com.example.haruapp.subscription.service;
 
 import com.example.haruapp.global.error.CustomException;
 import com.example.haruapp.global.error.ErrorCode;
+import com.example.haruapp.global.model.MailType;
+import com.example.haruapp.global.service.MailService;
 import com.example.haruapp.member.domain.Member;
 import com.example.haruapp.member.mapper.MemberMapper;
 import com.example.haruapp.subscription.domain.Subscription;
@@ -10,11 +12,16 @@ import com.example.haruapp.subscription.dto.response.PaymentResponse;
 import com.example.haruapp.subscription.external.TossPaymentsClient;
 import com.example.haruapp.subscription.mapper.SubscriptionMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SubscriptionService {
@@ -22,6 +29,8 @@ public class SubscriptionService {
     private final MemberMapper memberMapper;
     private final SubscriptionMapper subscriptionMapper;
     private final TossPaymentsClient tossPaymentsClient;
+    private final FcmService fcmService;
+    private final MailService mailService;
 
     public String getOrCreateCustomerKey(Long userId) {
         Member member = memberMapper.findById(userId);
@@ -29,9 +38,13 @@ public class SubscriptionService {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
-        Subscription subscription = subscriptionMapper.findByUserId(userId);
+        Subscription subscription = subscriptionMapper.findLatestActiveByUserId(userId);
         if (subscription != null && subscription.getBillingKey() != null) {
             throw new CustomException(ErrorCode.ALREADY_SUBSCRIBED);
+        }
+        if ("CANCELLED".equals(subscription.getStatus()) &&
+                subscription.getExpiresAt().isAfter(LocalDate.now())) {    // 만료 전 구독 취소 → 만료 전 다시 재결제
+            subscriptionMapper.updateStatusToActive(subscription.getSubscriptionId());
         }
 
         // customerKey가 있는 경우
@@ -46,19 +59,19 @@ public class SubscriptionService {
     }
 
     public void confirmBillingKey(String authKey, String customerKey) {
-        //  Toss에 billingKey 요청
-        BillingResponse billing = tossPaymentsClient.requestBillingKey(authKey, customerKey);
-
         Member member = memberMapper.findByCustomerKey(customerKey);
         if (member == null) {
             throw new CustomException(ErrorCode.USER_NOT_FOUND);
         }
 
         // 기존 구독 존재 여부 확인
-        Subscription sub = subscriptionMapper.findByUserId(member.getUserId());
+        Subscription sub = subscriptionMapper.findLatestActiveByUserId(member.getUserId());
         if (sub != null && sub.getBillingKey() != null) {
             throw new CustomException(ErrorCode.ALREADY_SUBSCRIBED);
         }
+
+        //  Toss에 billingKey 요청
+        BillingResponse billing = tossPaymentsClient.requestBillingKey(authKey, customerKey);
 
         // billingKey 기반 자동결제 요청
         PaymentResponse payment = tossPaymentsClient.requestAutoPayment(billing.getBillingKey(), customerKey);
@@ -67,14 +80,42 @@ public class SubscriptionService {
         }
 
         // 구독 저장
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         subscriptionMapper.insertSubscription(
                 member.getUserId(),
                 billing.getBillingKey(),
+                "ACTIVE",
                 now,
                 now.plusMonths(1),
                 now.plusMonths(1)
         );
+
+        fcmService.sendNotification(
+                member.getUserId(),
+                "HaRU 감정 카드 정기 구독 결제 완료 🎉",
+                "감정 카드를 생성해 보세요! \uD83D\uDCF8"
+        );
+        sendSubscriptionSuccessEmail(member, now, now.plusMonths(1));
+    }
+
+    private void sendSubscriptionSuccessEmail(Member member, LocalDate startedAt, LocalDate expiresAt) {
+        try {
+            Map<String, Object> vars = new HashMap<>();
+            vars.put("username", member.getNickname());
+            vars.put("amount", "2,900");
+            vars.put("startedAt", startedAt.toString());
+            vars.put("expiresAt", expiresAt.toString());
+
+            mailService.sendMail(member.getEmail(), MailType.SUBSCRIPTION_COMPLETE, vars);
+        } catch (Exception e) {
+            log.warn("구독 완료 이메일 전송 실패: {}", e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void cancelSubscription(Long userId) {
+        Long subscriptionId = subscriptionMapper.findLatestSubscriptionIdByUserId(userId);
+        subscriptionMapper.cancelSubscription(userId, subscriptionId);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.haruapp.store.mapper;
 
+import com.example.haruapp.store.dto.response.StoreResponse;
 import com.example.haruapp.store.dto.response.StoreSearchResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -45,4 +46,13 @@ public interface StoreMapper {
                                          @Param("offset") int offset,
                                          @Param("size") int size);
 
+	@Select("""
+        SELECT s.STORE_ID, s.STORE_NAME, s.CATEGORY, s.FLOOR, 
+               s.DESCRIPTION, s.HASHTAG AS hashTags, s.IMAGE
+        FROM COURSE_STORE cs
+        JOIN STORE s ON cs.STORE_ID = s.STORE_ID
+        WHERE cs.COURSE_ID = #{courseId}
+        ORDER BY cs.SEQUENCE
+    """)
+	List<StoreResponse> findStoresByCourseId(@Param("courseId") Long courseId);
 }

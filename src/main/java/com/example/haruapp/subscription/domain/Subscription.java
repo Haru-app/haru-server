@@ -3,7 +3,7 @@ package com.example.haruapp.subscription.domain;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -13,10 +13,10 @@ public class Subscription {
     private String billingKey;
     private String isAutoRenew;
     private String status;
-    private LocalDateTime startedAt;
-    private LocalDateTime expiresAt;
-    private LocalDateTime cancelledAt;
-    private LocalDateTime nextPaymentAt;
+    private LocalDate startedAt;
+    private LocalDate expiresAt;
+    private LocalDate cancelledAt;
+    private LocalDate nextPaymentAt;
     private Long userId;
 
 }

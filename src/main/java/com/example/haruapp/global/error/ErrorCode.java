@@ -15,6 +15,7 @@ public enum ErrorCode {
 	JSON_CONVERT_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 파싱 실패"),
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "예기치 못한 서버 오류입니다."),
 	ACCESS_DENIED(HttpStatus.FORBIDDEN, "권한이 부족합니다."),
+  	REQUIRE_LOGIN(HttpStatus.UNAUTHORIZED, "해당 기능을 사용하려면 로그인이 필요합니다."),
 
 	// 회원가입에 사용
 	DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
@@ -34,11 +35,17 @@ public enum ErrorCode {
   COURSE_UPDATE_UNAUTHORIZED(HttpStatus.FORBIDDEN, "본인 코스만 수정할 수 있습니다."),
   COURSE_NOT_FOUND(HttpStatus.BAD_REQUEST, "해당 코스가 존재하지 않습니다."),
   COURSE_SCRAP_SELF(HttpStatus.BAD_REQUEST, "본인 코스는 스크랩할 수 없습니다."),
-    PARSE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "날씨 파싱에러"),
-    WEATHERAPI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"날씨 api 서버에러" ),
-    SIMILARITY_FETCH_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파이썬 서버에서 오류가 생겼습니다.");
+  PARSE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "날씨 파싱에러"),
+  WEATHERAPI_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"날씨 api 서버에러" ),
+  SIMILARITY_FETCH_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파이썬 서버에서 오류가 생겼습니다."),
 
-            ;
+	// 이미지 카드 생성에 사용
+	UNSUPPORTED_IMAGE_FORMAT(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "이미지 파일은 jpg, png 형식만 지원됩니다."),
+	IMAGE_PROCESSING_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 처리 중 오류가 발생했습니다.");
+
+	;
+
+
 	// Member
 	private final HttpStatus status;
 
