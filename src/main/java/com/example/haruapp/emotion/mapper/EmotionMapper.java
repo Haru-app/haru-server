@@ -1,12 +1,11 @@
 package com.example.haruapp.emotion.mapper;
 
-import java.util.List;
-
+import com.example.haruapp.emotion.dto.EmotionResponse;
+import com.example.haruapp.emotion.dto.response.EmotionHistoryResponse;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-
-import com.example.haruapp.emotion.dto.response.EmotionHistoryResponse;
+import java.util.List;
 
 @Mapper
 public interface EmotionMapper {
@@ -34,5 +33,10 @@ public interface EmotionMapper {
 	List<EmotionHistoryResponse> findEmotionsByUserIdAndMonth(@Param("userId") Long userId,
 		@Param("year") int year,
 		@Param("month") int month);
+
+    @Select("""
+            select EMOTION_ID,EMOTION_NAME,EMOTION_COLOR, DESCRIPTION as emotionDescription from EMOTION
+            """)
+    List<EmotionResponse> findAllToEmotionResponse();
 
 }
