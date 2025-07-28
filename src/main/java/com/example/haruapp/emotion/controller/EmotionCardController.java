@@ -1,5 +1,6 @@
 package com.example.haruapp.emotion.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -31,19 +32,10 @@ public class EmotionCardController {
 		@RequestParam("userId") Long userId,
 		@RequestParam("courseId") Long courseId,
 		@RequestPart(value = "image", required = false) MultipartFile image
-	) {
-
-		try {
-			String aiImageUrl = emotionCardService.saveEmotion(userId, courseId, comment, image);
-			return ResponseEntity.status(HttpStatus.CREATED)
-				.body(new EmotionCardResponse(true, "감정 정보가 저장되었습니다.", aiImageUrl));
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-				.body(new EmotionCardResponse(false, e.getMessage(), null));
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-				.body(new EmotionCardResponse(false, "서버 오류 발생", null));
-		}
+	) throws IOException {
+		String aiImageUrl = emotionCardService.saveEmotion(userId, courseId, comment, image);
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(new EmotionCardResponse(true, "감정 정보가 저장되었습니다.", aiImageUrl));
 	}
 
 	@GetMapping("/card-urls")
