@@ -1,5 +1,11 @@
 package com.example.haruapp.course_command.service;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.example.haruapp.course_command.dto.response.CourseListResponse;
 import com.example.haruapp.course_command.domain.CourseEntity;
 import com.example.haruapp.course_command.domain.CourseStoreEntity;
 import com.example.haruapp.course_command.dto.request.CourseSaveRequest;
@@ -7,11 +13,8 @@ import com.example.haruapp.course_command.dto.request.CourseUpdateRequest;
 import com.example.haruapp.course_command.mapper.CourseMapper;
 import com.example.haruapp.global.error.CustomException;
 import com.example.haruapp.global.error.ErrorCode;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -103,6 +106,62 @@ public class CourseService {
             courseMapper.insertCourseStore(newCourseId, s.getStoreId(), s.getSequence());
         }
 
-        return newCourseId;
-    }
+		return newCourseId;
+	}
+
+	/**
+	 * 좋아요 수가 많은 순으로 코스 목록 조회
+	 *
+	 * @param userId 현재 로그인한 사용자 ID
+	 */
+	public List<CourseListResponse> getCoursesByLikes(Long userId) {
+
+		return courseMapper.findAllCoursesOrderByLikes(userId);
+	}
+
+	/**
+	 * 코스 좋아요 추가
+	 * @param courseId 좋아요할 코스 ID
+	 * @param userId 현재 로그인한 사용자 ID
+	 */
+	@Transactional
+	public void addCourseLike(Long courseId, Long userId) {
+		if (userId == null) {
+			throw new CustomException(ErrorCode.REQUIRE_LOGIN);
+		}
+		if (courseMapper.findCourseById(courseId) == null) {
+			throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
+		}
+
+		courseMapper.insertCourseLike(courseId, userId);
+	}
+
+	/**
+	 * 코스 좋아요 취소
+	 * @param courseId 좋아요를 취소할 코스 ID
+	 * @param userId 현재 로그인한 사용자 ID
+	 */
+	@Transactional
+	public void removeCourseLike(Long courseId, Long userId) {
+		if (userId == null) {
+			throw new CustomException(ErrorCode.REQUIRE_LOGIN);
+		}
+		if (courseMapper.findCourseById(courseId) == null) {
+			throw new CustomException(ErrorCode.COURSE_NOT_FOUND);
+		}
+
+		courseMapper.deleteCourseLike(courseId, userId);
+	}
+
+	/**
+	 * 내 코스 목록 조회
+	 * @param userId 현재 로그인한 사용자 ID
+	 */
+	public List<CourseListResponse> getMyCourses(Long userId) {
+		if(userId == null) {
+			throw new CustomException(ErrorCode.REQUIRE_LOGIN);
+		}
+
+		return courseMapper.findMyCourses(userId);
+	}
 }
