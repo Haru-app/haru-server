@@ -18,6 +18,7 @@ public enum ErrorCode {
 
 	// 이미지 카드 생성에 사용
 	UNSUPPORTED_IMAGE_FORMAT(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "이미지 파일은 jpg, png 형식만 지원됩니다."),
+	IMAGE_PROCESSING_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 처리 중 오류가 발생했습니다.");
 
 	;
 
