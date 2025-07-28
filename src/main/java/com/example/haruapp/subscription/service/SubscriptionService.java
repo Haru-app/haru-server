@@ -11,6 +11,7 @@ import com.example.haruapp.subscription.external.TossPaymentsClient;
 import com.example.haruapp.subscription.mapper.SubscriptionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -77,6 +78,7 @@ public class SubscriptionService {
         );
     }
 
+    @Transactional
     public void cancelSubscription(Long userId) {
         Long subscriptionId = subscriptionMapper.findLatestSubscriptionIdByUserId(userId);
         subscriptionMapper.cancelSubscription(userId, subscriptionId);
