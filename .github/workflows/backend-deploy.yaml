@@ -64,4 +64,6 @@ jobs:
                 --restart always \
                 -e TZ=Asia/Seoul \
                 --env-file /home/mapharu00/backend.env \
+                -v /home/mapharu00/haru-firebase-key.json:/app/resource/firebase/haru-firebase-key.json \
+                -v /home/mapharu00/gcp-key.json:/app/resource/gcp-key.json \
                 $IMAGE_TAG"
