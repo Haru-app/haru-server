@@ -11,8 +11,9 @@ import com.example.haruapp.subscription.external.TossPaymentsClient;
 import com.example.haruapp.subscription.mapper.SubscriptionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -67,14 +68,21 @@ public class SubscriptionService {
         }
 
         // 구독 저장
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         subscriptionMapper.insertSubscription(
                 member.getUserId(),
                 billing.getBillingKey(),
+                "ACTIVE",
                 now,
                 now.plusMonths(1),
                 now.plusMonths(1)
         );
+    }
+
+    @Transactional
+    public void cancelSubscription(Long userId) {
+        Long subscriptionId = subscriptionMapper.findLatestSubscriptionIdByUserId(userId);
+        subscriptionMapper.cancelSubscription(userId, subscriptionId);
     }
 
 }
