@@ -1,21 +1,21 @@
-package com.example.haruapp.course.dto.response;
+package com.example.haruapp.course_command.dto.response;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@AllArgsConstructor
+@Setter
+@NoArgsConstructor
 public class CourseListResponse {
 
 	private Long courseId;
 
 	private String title;
 
-	private String emotionName1;
-
-	private String emotionName2;
+	private String emotionName;
 
 	private String weather;
 
@@ -29,5 +29,5 @@ public class CourseListResponse {
 
 	private int likeCount;
 
-	private boolean isLiked;
+	private Boolean isLiked;
 }
