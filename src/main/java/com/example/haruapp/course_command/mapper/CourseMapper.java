@@ -89,6 +89,7 @@ public interface CourseMapper {
      * @return 인기순으로 정렬된 코스 목록
      */
     @Select("""
+        <script>
         SELECT 
             c.COURSE_ID as courseId,
             c.TITLE as title,
@@ -121,7 +122,18 @@ public interface CourseMapper {
         ) like_count ON c.COURSE_ID = like_count.COURSE_ID
         LEFT JOIN COURSE_LIKE user_like ON c.COURSE_ID = user_like.COURSE_ID 
             AND user_like.USER_ID = #{userId}
+        <where>
+          <if test="emotion != null">
+            AND c.EMOTION_ID = (
+              SELECT EMOTION_ID FROM EMOTION WHERE EMOTION_NAME = #{emotion}
+            )
+          </if>
+          <if test="weather != null">
+            AND c.WEATHER = #{weather}
+          </if>
+        </where>
         ORDER BY COALESCE(like_count.like_count, 0) DESC, c.CREATED_AT DESC
+        </script>
         """)
         @Results(id = "AllCoursesOrderByLikes", value = {
             @Result(column="courseId",       property="courseId"),
@@ -136,7 +148,11 @@ public interface CourseMapper {
             @Result(property="storeNames", column="courseId", javaType = List.class,
                 many=@Many(select="findStoreNamesByCourseId"))
         })
-    List<CourseListResponse> findAllCoursesOrderByLikes(@Param("userId") Long userId);
+    List<CourseListResponse> findAllCoursesOrderByLikes(
+        @Param("userId") Long userId,
+        @Param("emotion") String emotion,
+        @Param("weather") String weather
+    );
 
     @Insert("INSERT INTO COURSE_LIKE (COURSE_LIKE_ID, COURSE_ID, USER_ID, CREATED_AT) " +
         "VALUES (COURSE_LIKE_SEQ.NEXTVAL, #{courseId}, #{userId}, SYSDATE)")

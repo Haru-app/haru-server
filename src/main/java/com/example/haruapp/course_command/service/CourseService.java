@@ -114,9 +114,9 @@ public class CourseService {
 	 *
 	 * @param userId 현재 로그인한 사용자 ID
 	 */
-	public List<CourseListResponse> getCoursesByLikes(Long userId) {
+	public List<CourseListResponse> getCoursesByLikes(Long userId, String emotion, String weather) {
 
-		return courseMapper.findAllCoursesOrderByLikes(userId);
+		return courseMapper.findAllCoursesOrderByLikes(userId, emotion, weather);
 	}
 
 	/**

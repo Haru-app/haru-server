@@ -67,9 +67,13 @@ public class CourseController {
      * 코스 목록 인기순 조회
      * */
     @GetMapping("/popular")
-    public ResponseEntity<List<CourseListResponse>> getCoursesSortedByPopularity(@RequestParam("userId") Long userId) {
+    public ResponseEntity<List<CourseListResponse>> getCoursesSortedByPopularity(
+        @RequestParam(required = false) Long userId,
+        @RequestParam(required = false) String emotion,
+        @RequestParam(required = false) String weather
+    ) {
 
-        List<CourseListResponse> courses = courseService.getCoursesByLikes(userId);
+        List<CourseListResponse> courses = courseService.getCoursesByLikes(userId, emotion, weather);
         return ResponseEntity.ok(courses);
     }
 
