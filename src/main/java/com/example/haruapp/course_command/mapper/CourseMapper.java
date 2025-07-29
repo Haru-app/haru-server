@@ -34,6 +34,20 @@ public interface CourseMapper {
                            @Param("storeId") Long storeId,
                            @Param("sequence") int sequence);
 
+    // 코스 점수 저장
+    @Insert("""
+    INSERT INTO course_score (
+        course_id, average_score, max_possible_score, diversity_score, similarity_stddev
+    ) VALUES (
+        #{courseId}, #{averageScore}, #{maxPossibleScore}, #{diversityScore}, #{similarityStddev}
+    )
+    """)
+    void insertCourseScore(@Param("courseId") Long courseId,
+                           @Param("averageScore") Double averageScore,
+                           @Param("maxPossibleScore") Double maxPossibleScore,
+                           @Param("diversityScore") Double diversityScore,
+                           @Param("similarityStddev") Double similarityStddev);
+
     // 코스 생성자 아이디
     @Select("SELECT user_id FROM course WHERE course_id = #{courseId}")
     Long findCourseOwner(Long courseId);

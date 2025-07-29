@@ -2,6 +2,7 @@ package com.example.haruapp.course_command.service;
 
 import java.util.List;
 
+import com.example.haruapp.course_command.dto.request.CourseScoreDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,17 +35,31 @@ public class CourseService {
             throw new CustomException(ErrorCode.COURSE_STORE_COUNT_INVALID);
         }
 
+		// 코스 저장
         Long courseId = courseMapper.getNextCourseId();
         courseMapper.insertCourse(courseId, request.getTitle(), request.getWeather(),
                 userId, request.getEmotionId());
 
         int sequence = 1;
 
+		// 코스 매장들 저장
         for (Long storeId : stores) {
             courseMapper.insertCourseStore(courseId, storeId, sequence++);
         }
 
-        return courseId;
+		// 코스 점수 저장
+		CourseScoreDTO score = request.getScore();
+		if (score != null) {
+			courseMapper.insertCourseScore(
+					courseId,
+					score.getAverageScore(),
+					score.getMaxPossibleScore(),
+					score.getDiversityScore(),
+					score.getSimilarityStddev()
+			);
+		}
+
+		return courseId;
     }
 
 
