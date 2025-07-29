@@ -1,11 +1,20 @@
 package com.example.haruapp.course_command.mapper;
 
-import com.example.haruapp.course_command.dto.response.CourseListResponse;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Many;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Result;
+import org.apache.ibatis.annotations.Results;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
 import com.example.haruapp.course_command.domain.CourseEntity;
 import com.example.haruapp.course_command.domain.CourseStoreEntity;
-import org.apache.ibatis.annotations.*;
-
-import java.util.List;
+import com.example.haruapp.course_command.dto.response.CourseListResponse;
 
 @Mapper
 public interface CourseMapper {
@@ -33,6 +42,20 @@ public interface CourseMapper {
     void insertCourseStore(@Param("courseId") Long courseId,
                            @Param("storeId") Long storeId,
                            @Param("sequence") int sequence);
+
+    // 코스 점수 저장
+    @Insert("""
+    INSERT INTO course_score (
+        course_id, average_score, max_possible_score, diversity_score, similarity_stddev
+    ) VALUES (
+        #{courseId}, #{averageScore}, #{maxPossibleScore}, #{diversityScore}, #{similarityStddev}
+    )
+    """)
+    void insertCourseScore(@Param("courseId") Long courseId,
+                           @Param("averageScore") Double averageScore,
+                           @Param("maxPossibleScore") Double maxPossibleScore,
+                           @Param("diversityScore") Double diversityScore,
+                           @Param("similarityStddev") Double similarityStddev);
 
     // 코스 생성자 아이디
     @Select("SELECT user_id FROM course WHERE course_id = #{courseId}")
@@ -89,6 +112,7 @@ public interface CourseMapper {
      * @return 인기순으로 정렬된 코스 목록
      */
     @Select("""
+        <script>
         SELECT 
             c.COURSE_ID as courseId,
             c.TITLE as title,
@@ -121,7 +145,25 @@ public interface CourseMapper {
         ) like_count ON c.COURSE_ID = like_count.COURSE_ID
         LEFT JOIN COURSE_LIKE user_like ON c.COURSE_ID = user_like.COURSE_ID 
             AND user_like.USER_ID = #{userId}
+        <if test="storeKeyword != null">
+          JOIN COURSE_STORE cs ON c.COURSE_ID = cs.COURSE_ID
+          JOIN STORE s ON cs.STORE_ID = s.STORE_ID
+        </if>
+        <where>
+          <if test="emotion != null">
+            AND c.EMOTION_ID = (
+              SELECT EMOTION_ID FROM EMOTION WHERE EMOTION_NAME = #{emotion}
+            )
+          </if>
+          <if test="weather != null">
+            AND c.WEATHER = #{weather}
+          </if>
+          <if test="storeKeyword != null">
+            AND LOWER(s.STORE_NAME) LIKE '%' || LOWER(#{storeKeyword}) || '%'
+          </if>
+        </where>
         ORDER BY COALESCE(like_count.like_count, 0) DESC, c.CREATED_AT DESC
+        </script>
         """)
         @Results(id = "AllCoursesOrderByLikes", value = {
             @Result(column="courseId",       property="courseId"),
@@ -136,7 +178,12 @@ public interface CourseMapper {
             @Result(property="storeNames", column="courseId", javaType = List.class,
                 many=@Many(select="findStoreNamesByCourseId"))
         })
-    List<CourseListResponse> findAllCoursesOrderByLikes(@Param("userId") Long userId);
+    List<CourseListResponse> findAllCoursesOrderByLikes(
+        @Param("userId") Long userId,
+        @Param("emotion") String emotion,
+        @Param("weather") String weather,
+        @Param("storeKeyword") String storeKeyword
+    );
 
     @Insert("INSERT INTO COURSE_LIKE (COURSE_LIKE_ID, COURSE_ID, USER_ID, CREATED_AT) " +
         "VALUES (COURSE_LIKE_SEQ.NEXTVAL, #{courseId}, #{userId}, SYSDATE)")
@@ -150,6 +197,7 @@ public interface CourseMapper {
      * 최근에 생성한 코스가 우선순위를 가진다.
      */
     @Select("""
+        <script>
         SELECT 
             c.COURSE_ID as courseId,
             c.TITLE as title,
@@ -182,8 +230,26 @@ public interface CourseMapper {
         ) like_count ON c.COURSE_ID = like_count.COURSE_ID
         LEFT JOIN COURSE_LIKE user_like ON c.COURSE_ID = user_like.COURSE_ID 
             AND user_like.USER_ID = #{userId}
-        WHERE c.USER_ID = #{userId}
+        <if test="storeKeyword != null">
+          JOIN COURSE_STORE cs ON c.COURSE_ID = cs.COURSE_ID
+          JOIN STORE s ON cs.STORE_ID = s.STORE_ID
+        </if>
+        <where>
+          c.USER_ID = #{userId}
+          <if test="emotion != null">
+            AND c.EMOTION_ID = (
+              SELECT EMOTION_ID FROM EMOTION WHERE EMOTION_NAME = #{emotion}
+            )
+          </if>
+          <if test="weather != null">
+            AND c.WEATHER = #{weather}
+          </if>
+          <if test="storeKeyword != null">
+            AND LOWER(s.STORE_NAME) LIKE '%' || LOWER(#{storeKeyword}) || '%'
+          </if>
+        </where>
         ORDER BY c.CREATED_AT DESC
+        </script>
         """)
     @Results(id = "MyCourses", value = {
         @Result(column="courseId",       property="courseId"),
@@ -198,5 +264,10 @@ public interface CourseMapper {
         @Result(property="storeNames", column="courseId", javaType = List.class,
             many=@Many(select="findStoreNamesByCourseId"))
     })
-    List<CourseListResponse> findMyCourses(@Param("userId") Long userId);
+    List<CourseListResponse> findMyCourses(
+        @Param("userId") Long userId,
+        @Param("emotion") String emotion,
+        @Param("weather") String weather,
+        @Param("storeKeyword") String storeKeyword
+    );
 }

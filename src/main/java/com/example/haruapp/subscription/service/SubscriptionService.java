@@ -42,7 +42,7 @@ public class SubscriptionService {
         if (subscription != null && subscription.getBillingKey() != null) {
             throw new CustomException(ErrorCode.ALREADY_SUBSCRIBED);
         }
-        if ("CANCELLED".equals(subscription.getStatus()) &&
+        if (subscription != null && "CANCELLED".equals(subscription.getStatus()) &&
                 subscription.getExpiresAt().isAfter(LocalDate.now())) {    // 만료 전 구독 취소 → 만료 전 다시 재결제
             subscriptionMapper.updateStatusToActive(subscription.getSubscriptionId());
         }
@@ -116,6 +116,7 @@ public class SubscriptionService {
     public void cancelSubscription(Long userId) {
         Long subscriptionId = subscriptionMapper.findLatestSubscriptionIdByUserId(userId);
         subscriptionMapper.cancelSubscription(userId, subscriptionId);
+        memberMapper.clearCustomerKey(userId);
     }
 
 }

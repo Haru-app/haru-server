@@ -10,4 +10,5 @@ public class CourseSaveRequest {
     private String weather;
     private Long emotionId;
     private List<Long> storeList;
+    private CourseScoreDTO score;
 }

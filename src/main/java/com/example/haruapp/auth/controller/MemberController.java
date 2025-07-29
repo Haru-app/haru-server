@@ -1,5 +1,6 @@
 package com.example.haruapp.auth.controller;
 
+import com.example.haruapp.auth.domain.OauthRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -77,4 +78,11 @@ public class MemberController {
 		return ResponseEntity.ok(response);
 	}
 
+	@PostMapping("/login/oauth")
+	public ResponseEntity<LoginResponse> oauthLogin(@RequestBody OauthRequest request) {
+
+		LoginResponse response = memberService.oauthLogin(request);
+		return ResponseEntity.ok(response);
+
+	}
 }

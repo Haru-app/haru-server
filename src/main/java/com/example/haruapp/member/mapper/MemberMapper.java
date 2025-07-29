@@ -22,6 +22,11 @@ public interface MemberMapper {
     @Select("SELECT USER_ID AS userId, EMAIL, NICKNAME, CUSTOMER_KEY AS customerKey " +
             "FROM MEMBER " +
             "WHERE CUSTOMER_KEY = #{customerKey}")
-    Member findByCustomerKey(String customerKey);
+    Member findByCustomerKey(@Param("customerKey") String customerKey);
+
+    @Update("UPDATE MEMBER " +
+            "SET CUSTOER_KEY = NULL " +
+            "WHERE USER_ID =#{userId}")
+    void clearCustomerKey(@Param("userId") Long userId);
 
 }

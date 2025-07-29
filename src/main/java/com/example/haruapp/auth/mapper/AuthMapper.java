@@ -1,11 +1,14 @@
 package com.example.haruapp.auth.mapper;
 
+import com.example.haruapp.auth.domain.OauthRequest;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectKey;
 
 import com.example.haruapp.auth.domain.Member;
+
+import java.util.Optional;
 
 @Mapper
 public interface AuthMapper {
@@ -28,4 +31,11 @@ public interface AuthMapper {
 	@Select("SELECT * FROM member WHERE email = #{email}")
 	Member findByEmail(String email);
 
+	@Insert("INSERT INTO member (user_id, email, nickname, oauthId, oauth_type) " +
+			"VALUES (#{userId}, #{email}, #{nickname}, #{oauthId}, #{oauthType})")
+	@SelectKey(statement = "SELECT member_seq.NEXTVAL FROM dual", keyProperty = "userId", before = true, resultType = Long.class)
+	void insertKakaoMember(OauthRequest member);
+
+	@Select("SELECT * FROM member WHERE email = #{email} and OAUTHID=#{oauthId}")
+	Member findByEmailWithId(String email, String oauthId);
 }
