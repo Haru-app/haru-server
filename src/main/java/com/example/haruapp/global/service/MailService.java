@@ -41,7 +41,6 @@ public class MailService {
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom("your_email@gmail.com");
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(html, true);
