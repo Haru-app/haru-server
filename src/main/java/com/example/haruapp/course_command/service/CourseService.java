@@ -129,9 +129,9 @@ public class CourseService {
 	 *
 	 * @param userId 현재 로그인한 사용자 ID
 	 */
-	public List<CourseListResponse> getCoursesByLikes(Long userId, String emotion, String weather) {
+	public List<CourseListResponse> getCoursesSortedByLikes(Long userId, String emotion, String weather, String storeKeyword) {
 
-		return courseMapper.findAllCoursesOrderByLikes(userId, emotion, weather);
+		return courseMapper.findAllCoursesOrderByLikes(userId, emotion, weather, storeKeyword);
 	}
 
 	/**
@@ -172,11 +172,11 @@ public class CourseService {
 	 * 내 코스 목록 조회
 	 * @param userId 현재 로그인한 사용자 ID
 	 */
-	public List<CourseListResponse> getMyCourses(Long userId) {
+	public List<CourseListResponse> getMyCourses(Long userId, String emotion, String weather, String storeKeyword) {
 		if(userId == null) {
 			throw new CustomException(ErrorCode.REQUIRE_LOGIN);
 		}
 
-		return courseMapper.findMyCourses(userId);
+		return courseMapper.findMyCourses(userId, emotion, weather, storeKeyword);
 	}
 }

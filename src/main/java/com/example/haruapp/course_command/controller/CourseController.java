@@ -70,10 +70,11 @@ public class CourseController {
     public ResponseEntity<List<CourseListResponse>> getCoursesSortedByPopularity(
         @RequestParam(required = false) Long userId,
         @RequestParam(required = false) String emotion,
-        @RequestParam(required = false) String weather
+        @RequestParam(required = false) String weather,
+        @RequestParam(required = false) String storeKeyword
     ) {
 
-        List<CourseListResponse> courses = courseService.getCoursesByLikes(userId, emotion, weather);
+        List<CourseListResponse> courses = courseService.getCoursesSortedByLikes(userId, emotion, weather, storeKeyword);
         return ResponseEntity.ok(courses);
     }
 
@@ -82,9 +83,12 @@ public class CourseController {
      */
     @GetMapping("/my")
     public ResponseEntity<List<CourseListResponse>> getMyCourses(
-        @RequestParam("userId") Long userId
+        @RequestParam("userId") Long userId,
+        @RequestParam(required = false) String emotion,
+        @RequestParam(required = false) String weather,
+        @RequestParam(required = false) String storeKeyword
     ) {
-        List<CourseListResponse> myStores = courseService.getMyCourses(userId);
+        List<CourseListResponse> myStores = courseService.getMyCourses(userId, emotion, weather, storeKeyword);
         return ResponseEntity.ok(myStores);
     }
 
