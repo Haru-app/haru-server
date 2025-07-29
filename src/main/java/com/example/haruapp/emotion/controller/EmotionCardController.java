@@ -33,18 +33,20 @@ public class EmotionCardController {
 		@RequestParam("courseId") Long courseId,
 		@RequestPart(value = "image", required = false) MultipartFile image
 	) throws IOException {
+
 		String aiImageUrl = emotionCardService.saveEmotion(userId, courseId, comment, image);
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(new EmotionCardResponse(true, "감정 정보가 저장되었습니다.", aiImageUrl));
 	}
 
 	@GetMapping("/card-urls")
-	public ResponseEntity<List<EmotionCardUrlResponse>> getEmotionCardUrls(
+	public ResponseEntity<List<EmotionCardUrlResponse>> getEmotionCardUrlsByDate(
 		@RequestParam Long userId,
-		@RequestParam Long courseId
+		@RequestParam String date
 	) {
 
-		List<EmotionCardUrlResponse> urls = emotionCardService.getEmotionCardUrls(userId, courseId);
+		List<EmotionCardUrlResponse> urls = emotionCardService.getEmotionCardUrlsByDate(userId, date);
 		return ResponseEntity.ok(urls);
 	}
+
 }
