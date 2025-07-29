@@ -1,5 +1,6 @@
 package com.example.haruapp.auth.service;
 
+import com.example.haruapp.auth.domain.OauthRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -105,4 +106,19 @@ public class MemberService {
 		);
 	}
 
+	@Transactional
+	public LoginResponse oauthLogin(OauthRequest request) {
+
+		Member member = authMapper.findByEmailWithId(request.getEmail(),request.getOauthId());
+		if (member == null) {
+			authMapper.insertKakaoMember(request);
+		}
+
+		return new LoginResponse(
+				request.getUserId(),
+				request.getEmail(),
+				request.getNickname(),
+				"로그인에 성공했습니다."
+		);
+	}
 }
