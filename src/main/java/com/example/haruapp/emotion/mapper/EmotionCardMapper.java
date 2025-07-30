@@ -29,4 +29,15 @@ public interface EmotionCardMapper {
 		@Param("userId") Long userId,
 		@Param("date") String date
 	);
+
+	@Select("""
+        SELECT CASE\s
+                 WHEN EXISTS (
+                     SELECT 1 FROM EMOTION_CARD WHERE COURSE_ID = #{courseId}
+                 ) THEN 1
+                 ELSE 0
+               END
+          FROM DUAL
+    """)
+	boolean existsByCourseId(@Param("courseId") Long courseId);
 }

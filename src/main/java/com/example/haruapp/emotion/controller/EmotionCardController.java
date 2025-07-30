@@ -2,6 +2,7 @@ package com.example.haruapp.emotion.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -49,6 +50,14 @@ public class EmotionCardController {
 		log.info("getEmotionCardUrlsByDate {} ,{}", userId, date);
 		List<EmotionCardUrlResponse> urls = emotionCardService.getEmotionCardUrlsByDate(userId, date);
 		return ResponseEntity.ok(urls);
+	}
+
+	@GetMapping("/card/exists")
+	public ResponseEntity<Map<String, Boolean>> checkEmotionCardExists(
+		@RequestParam Long courseId
+	) {
+		boolean exists = emotionCardService.existsEmotionCard(courseId);
+		return ResponseEntity.ok(Map.of("exists", exists));
 	}
 
 }
