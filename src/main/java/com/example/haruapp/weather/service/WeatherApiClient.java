@@ -4,6 +4,7 @@ import com.example.haruapp.global.error.CustomException;
 import com.example.haruapp.global.error.ErrorCode;
 import com.example.haruapp.global.repository.RedisRepository;
 import com.example.haruapp.weather.dto.WeatherForecastDto;
+import com.example.haruapp.weather.dto.WeatherItem;
 import com.example.haruapp.weather.util.DateFormatUtil;
 import com.example.haruapp.weather.util.WeatherXMLCleaningUtil;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +42,18 @@ public class WeatherApiClient {
         String weatherSummary =aiService.generation(weatherForecastDto);
         log.info("날씨 요약: {}", weatherSummary);
 
+        String temperature = weatherForecastDto
+                .getWeather()
+                .stream()
+                .filter(item -> "T1H".equals(item.getCategory()))
+                .findFirst()
+                .map(WeatherItem::getValue)
+                .get();
+        log.info("온도: {}", temperature);
+        weatherSummary = weatherSummary+", "+ temperature;
         redisRepository.setWeather(baseDate,baseTime,weatherSummary);
 
+        log.info("최종 날씨: {}", weatherSummary);
         return weatherSummary;
     }
 
