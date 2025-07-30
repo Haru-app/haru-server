@@ -110,14 +110,18 @@ public class MemberService {
 	public LoginResponse oauthLogin(OauthRequest request) {
 
 		Member member = authMapper.findByEmailWithId(request.getEmail(),request.getOauthId());
+
 		if (member == null) {
 			authMapper.insertKakaoMember(request);
+			member.setUserId(request.getUserId());
+			member.setNickname(request.getNickname());
+			member.setEmail(request.getEmail());
 		}
 
 		return new LoginResponse(
-				request.getUserId(),
-				request.getEmail(),
-				request.getNickname(),
+				member.getUserId(),
+				member.getEmail(),
+				member.getNickname(),
 				"로그인에 성공했습니다."
 		);
 	}
