@@ -90,12 +90,16 @@ public class SubscriptionService {
                 now.plusMonths(1)
         );
 
-        fcmService.sendNotification(
-                member.getUserId(),
-                "HaRU 감정 카드 정기 구독 결제 완료 🎉",
-                "감정 카드를 생성해 보세요! \uD83D\uDCF8"
-        );
         sendSubscriptionSuccessEmail(member, now, now.plusMonths(1));
+        try {
+            fcmService.sendNotification(
+                    member.getUserId(),
+                    "HaRU 감정 카드 정기 구독 결제 완료 🎉",
+                    "감정 카드를 생성해 보세요! \uD83D\uDCF8"
+            );
+        } catch (Exception e) {
+            log.warn("FCM 알림 전송 실패: {}", e.getMessage());
+        }
     }
 
     private void sendSubscriptionSuccessEmail(Member member, LocalDate startedAt, LocalDate expiresAt) {
