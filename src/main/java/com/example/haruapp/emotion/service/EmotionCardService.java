@@ -57,5 +57,10 @@ public class EmotionCardService {
 
 		return emotionCardMapper.findEmotionCardUrlsByDate(userId, date);
 	}
+
+	public boolean existsEmotionCard(Long courseId) {
+
+		return emotionCardMapper.existsByCourseId(courseId);
+	}
 }
 
