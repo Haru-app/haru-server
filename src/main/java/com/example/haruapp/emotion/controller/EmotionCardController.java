@@ -3,6 +3,7 @@ package com.example.haruapp.emotion.controller;
 import java.io.IOException;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import com.example.haruapp.emotion.service.EmotionCardService;
 
 import lombok.RequiredArgsConstructor;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/emotion")
 @RequiredArgsConstructor
@@ -44,7 +46,7 @@ public class EmotionCardController {
 		@RequestParam Long userId,
 		@RequestParam String date
 	) {
-
+		log.info("getEmotionCardUrlsByDate {} ,{}", userId, date);
 		List<EmotionCardUrlResponse> urls = emotionCardService.getEmotionCardUrlsByDate(userId, date);
 		return ResponseEntity.ok(urls);
 	}

@@ -8,4 +8,5 @@ import lombok.Data;
 public class EmotionCardUrlResponse {
 
 	private String filePath;
+	private String emotion;
 }
