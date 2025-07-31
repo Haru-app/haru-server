@@ -145,10 +145,6 @@ public interface CourseMapper {
         ) like_count ON c.COURSE_ID = like_count.COURSE_ID
         LEFT JOIN COURSE_LIKE user_like ON c.COURSE_ID = user_like.COURSE_ID 
             AND user_like.USER_ID = #{userId}
-        <if test="storeKeyword != null">
-          JOIN COURSE_STORE cs ON c.COURSE_ID = cs.COURSE_ID
-          JOIN STORE s ON cs.STORE_ID = s.STORE_ID
-        </if>
         <where>
           <if test="emotion != null">
             AND c.EMOTION_ID = (
@@ -156,10 +152,7 @@ public interface CourseMapper {
             )
           </if>
           <if test="weather != null">
-            AND c.WEATHER = #{weather}
-          </if>
-          <if test="storeKeyword != null">
-            AND LOWER(s.STORE_NAME) LIKE '%' || LOWER(#{storeKeyword}) || '%'
+            AND c.WEATHER LIKE #{weather} || '%'
           </if>
         </where>
         ORDER BY COALESCE(like_count.like_count, 0) DESC, c.CREATED_AT DESC
@@ -181,8 +174,7 @@ public interface CourseMapper {
     List<CourseListResponse> findAllCoursesOrderByLikes(
         @Param("userId") Long userId,
         @Param("emotion") String emotion,
-        @Param("weather") String weather,
-        @Param("storeKeyword") String storeKeyword
+        @Param("weather") String weather
     );
 
     @Insert("INSERT INTO COURSE_LIKE (COURSE_LIKE_ID, COURSE_ID, USER_ID, CREATED_AT) " +
@@ -230,10 +222,6 @@ public interface CourseMapper {
         ) like_count ON c.COURSE_ID = like_count.COURSE_ID
         LEFT JOIN COURSE_LIKE user_like ON c.COURSE_ID = user_like.COURSE_ID 
             AND user_like.USER_ID = #{userId}
-        <if test="storeKeyword != null">
-          JOIN COURSE_STORE cs ON c.COURSE_ID = cs.COURSE_ID
-          JOIN STORE s ON cs.STORE_ID = s.STORE_ID
-        </if>
         <where>
           c.USER_ID = #{userId}
           <if test="emotion != null">
@@ -242,10 +230,7 @@ public interface CourseMapper {
             )
           </if>
           <if test="weather != null">
-            AND c.WEATHER = #{weather}
-          </if>
-          <if test="storeKeyword != null">
-            AND LOWER(s.STORE_NAME) LIKE '%' || LOWER(#{storeKeyword}) || '%'
+            AND c.WEATHER LIKE #{weather} || '%'
           </if>
         </where>
         ORDER BY c.CREATED_AT DESC
@@ -267,7 +252,6 @@ public interface CourseMapper {
     List<CourseListResponse> findMyCourses(
         @Param("userId") Long userId,
         @Param("emotion") String emotion,
-        @Param("weather") String weather,
-        @Param("storeKeyword") String storeKeyword
+        @Param("weather") String weather
     );
 }
