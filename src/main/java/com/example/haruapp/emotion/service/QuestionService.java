@@ -20,24 +20,37 @@ public class QuestionService {
     public List<EmotionQuestion> getRandomQuestionByEmotion(int count) {
         List<EmotionQuestion> emotionQuestions = questionMapper.findByAllEmotionQuestion();
 
-        // emotionId 기준으로 그룹화
+        // emotionId 기준 그룹화
         Map<Long, List<EmotionQuestion>> grouped = emotionQuestions.stream()
                 .collect(Collectors.groupingBy(EmotionQuestion::getEmotionId));
 
-        // 각 emotionId 그룹에서 랜덤하게 1개씩 선택
         List<EmotionQuestion> selected = new ArrayList<>();
         Random random = new Random();
-        for (List<EmotionQuestion> group : grouped.values()) {
-            if (!group.isEmpty()) {
-                EmotionQuestion randomQuestion = group.get(random.nextInt(group.size()));
-                selected.add(randomQuestion);
+
+        // 1. emotionId 5와 6에서 각각 1개씩 무조건 포함
+        List<Long> mustIncludeIds = List.of(5L, 6L);
+        for (Long id : mustIncludeIds) {
+            List<EmotionQuestion> group = grouped.get(id);
+            if (group != null && !group.isEmpty()) {
+                selected.add(group.get(random.nextInt(group.size())));
             }
         }
 
-        // 선택된 질문 중에서 count개만 랜덤하게 반환
-        Collections.shuffle(selected);
-        return selected.stream()
-                .limit(count)
+        // 2. 나머지 emotionId 중에서 랜덤하게 2개 추출
+        List<Long> otherEmotionIds = grouped.keySet().stream()
+                .filter(id -> !mustIncludeIds.contains(id))
                 .collect(Collectors.toList());
+
+        Collections.shuffle(otherEmotionIds); // 랜덤 순서
+        for (int i = 0; i < 2 && i < otherEmotionIds.size(); i++) {
+            Long emotionId = otherEmotionIds.get(i);
+            List<EmotionQuestion> group = grouped.get(emotionId);
+            if (group != null && !group.isEmpty()) {
+                selected.add(group.get(random.nextInt(group.size())));
+            }
+        }
+
+        return selected;
     }
+
 }
