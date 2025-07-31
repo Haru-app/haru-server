@@ -50,7 +50,7 @@ public class EmotionController {
 
         int count = 4;
 
-        List<EmotionQuestion> questions = questionService.getRandomQuestionByEmotion(count);
+        List<EmotionQuestion> questions = questionService.getRandomQuestionByEmotion();
 
         log.info("questions {}", questions);
 

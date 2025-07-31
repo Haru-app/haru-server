@@ -21,6 +21,18 @@ public class EmotionSimilarityService {
     private static final String similarityRedisJsonKey = "question_emotion_similarity.json";
     private final RedisRepository redisRepository;
 
+//    private static final Map<String, List<String>> OPPOSITE_EMOTION_MAP = Map.of(
+//            "기쁨", List.of("무기력", "스트레스"),
+//            "여유", List.of("스트레스"),
+//            "설렘", List.of("무기력"),
+//            "호기심", List.of("무기력", "스트레스"),
+//            "무기력", List.of("활기참"),
+//            "스트레스", List.of("여유"),
+//            "활기참", List.of("무기력")
+//    );
+
+
+
     public Map<String, Double> calculateSimilarity(List<QuestionResultRequest> questionResultRequestList) {
 
         String beforeParse = redisRepository.getSimilarityMap(similarityRedisJsonKey);
@@ -42,33 +54,50 @@ public class EmotionSimilarityService {
 
         return calculateScore(similarityMap, questionResultRequestList);
     }
+    public Map<String, Double> calculateScore(
+            Map<String, Map<String, Double>> similarityMap,
+            List<QuestionResultRequest> questionResultRequestList) {
 
-
-    public Map<String, Double> calculateScore(Map<String, Map<String, Double>> similarityMap, List<QuestionResultRequest> questionResultRequestList) {
         Map<String, Double> emotionScoreMap = new HashMap<>();
 
         for (QuestionResultRequest questionResult : questionResultRequestList) {
-
             String questionId = questionResult.getQuestionId();
-
             int userScore = questionResult.getScore();
 
             Map<String, Double> emotionSimMap = similarityMap.get(questionId);
-
             log.info("emotionSimMap: {}", emotionSimMap);
 
+            double userWeight = switch (userScore) {
+                case 10 -> 2.0;
+                case 5 -> 0.5;
+                case 1 -> -1.5;
+                default -> 0.0;
+            };
+
             for (Map.Entry<String, Double> entry : emotionSimMap.entrySet()) {
-
                 String emotion = entry.getKey();
-
                 double similarity = entry.getValue();
 
-                double weightedScore = similarity * userScore;
-
+                double weightedScore = similarity * userWeight;
                 emotionScoreMap.put(emotion,
                         emotionScoreMap.getOrDefault(emotion, 0.0) + weightedScore);
+//
+//                // 반대 감정 보정: '예' → 반대 감정 감점 / '아니오' → 반대 감정 가점
+//                List<String> opposites = OPPOSITE_EMOTION_MAP.getOrDefault(emotion, List.of());
+//                for (String opposite : opposites) {
+//                    double delta = switch (userScore) {
+//                        case 10 -> -3.0;
+//                        case 1 -> +3.0;
+//                        default -> 0.0;
+//                    };
+//                    if (delta != 0.0) {
+//                        double updated = emotionScoreMap.getOrDefault(opposite, 0.0) + delta;
+//                        emotionScoreMap.put(opposite, updated);
+//                    }
+//                }
             }
         }
+
         return emotionScoreMap;
     }
 
