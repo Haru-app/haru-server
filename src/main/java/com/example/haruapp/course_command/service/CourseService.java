@@ -131,7 +131,14 @@ public class CourseService {
 	 */
 	public List<CourseListResponse> getCoursesSortedByLikes(Long userId, String emotion, String weather, String storeKeyword) {
 
-		return courseMapper.findAllCoursesOrderByLikes(userId, emotion, weather, storeKeyword);
+		List<CourseListResponse> filteredCourse =  courseMapper.findAllCoursesOrderByLikes(userId, emotion, weather);
+		if (storeKeyword != null && !storeKeyword.isEmpty()) {
+			filteredCourse.removeIf(course ->
+				course.getStoreNames() == null ||
+					course.getStoreNames().stream().noneMatch(name -> name.contains(storeKeyword))
+			);
+		}
+		return filteredCourse;
 	}
 
 	/**
@@ -177,6 +184,13 @@ public class CourseService {
 			throw new CustomException(ErrorCode.REQUIRE_LOGIN);
 		}
 
-		return courseMapper.findMyCourses(userId, emotion, weather, storeKeyword);
+		List<CourseListResponse> filteredCourse =  courseMapper.findMyCourses(userId, emotion, weather);
+		if (storeKeyword != null && !storeKeyword.isEmpty()) {
+			filteredCourse.removeIf(course ->
+				course.getStoreNames() == null ||
+				course.getStoreNames().stream().noneMatch(name -> name.contains(storeKeyword))
+			);
+		}
+		return filteredCourse;
 	}
 }
